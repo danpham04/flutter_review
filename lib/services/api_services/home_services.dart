@@ -45,9 +45,22 @@ class HomeServices extends HomeRepository {
   }
 
   @override
-  Future<UserModel> deleteData(String id) {
-    // TODO: implement deleteData
-    throw UnimplementedError();
+  Future<bool> deleteData(String id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to delete user');
+      }
+    } catch (e) {
+      throw UnimplementedError();
+    }
   }
 
   @override
@@ -57,8 +70,23 @@ class HomeServices extends HomeRepository {
   }
 
   @override
-  Future<UserModel> updateData() {
-    // TODO: implement updateData
-    throw UnimplementedError();
+  Future<UserModel> updateData(UserModel newUser, String id) async {
+    try {
+      final response = await http.put(
+        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser/$id"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(newUser.toMap()),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return UserModel.fromMap(jsonDecode(response.body));
+      } else {
+        throw Exception('Fail to update data');
+      }
+    } catch (e) {
+      throw UnimplementedError();
+    }
   }
 }

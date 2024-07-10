@@ -16,7 +16,7 @@ class _FeedState extends State<Feed> {
   int _curr = 0;
   final _controller = CarouselController();
 
-  List<UserModel> _loadUser = [];
+  List<UserModel> loadUser = [];
 
   final HomeServices _homeService = HomeServices();
 
@@ -30,7 +30,7 @@ class _FeedState extends State<Feed> {
     final List<UserModel> loadUserTemp = await _homeService.getData();
 
     setState(() {
-      _loadUser = loadUserTemp;
+      loadUser = loadUserTemp;
     });
   }
 
@@ -44,12 +44,12 @@ class _FeedState extends State<Feed> {
         ),
         Center(
           child: CarouselSlider.builder(
-            itemCount: _loadUser.length,
+            itemCount: loadUser.length,
             itemBuilder: (context, index, realIndex) {
-              UserModel users = UserModel();
+              // final users = loadUser[index];
 
-              if (_loadUser.isNotEmpty) {
-                users = _loadUser[index];
+              if (loadUser.isNotEmpty) {
+                final UserModel users = loadUser[index];
 
                 return GestureDetector(
                   onTap: () {
@@ -86,7 +86,7 @@ class _FeedState extends State<Feed> {
           padding: const EdgeInsets.all(10.0),
           child: AnimatedSmoothIndicator(
             activeIndex: _curr,
-            count: _loadUser.length,
+            count: loadUser.length,
             effect: const JumpingDotEffect(
               dotHeight: 10,
               dotWidth: 10,
@@ -117,5 +117,3 @@ class _FeedState extends State<Feed> {
     );
   }
 }
-
-class HomeService {}

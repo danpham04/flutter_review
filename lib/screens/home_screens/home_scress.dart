@@ -10,8 +10,9 @@ import 'package:flutter_review/widgets/app_bar_shared.dart';
 class HomeScress extends StatefulWidget {
   const HomeScress({
     super.key,
+    this.load = true,
   });
-
+  final bool load;
   @override
   State<HomeScress> createState() => _MyHomeState();
 }
@@ -57,13 +58,15 @@ class _MyHomeState extends State<HomeScress> {
             ],
           ),
         ),
-        body: const Center(
+        body: Center(
           child: TabBarView(
             children: [
-              Home(),
-              Feed(),
-              Profile(),
-              Settings(),
+              Home(
+                load: widget.load,
+              ),
+              const Feed(),
+              const Profile(),
+              const Settings(),
             ],
           ),
         ),

@@ -14,8 +14,6 @@ class CreateInfor extends StatefulWidget {
 }
 
 class _CreateInforState extends State<CreateInfor> {
-  final HomeServices _homeService = HomeServices();
-
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerGmail = TextEditingController();
   final TextEditingController _controllerAddress = TextEditingController();
@@ -40,7 +38,7 @@ class _CreateInforState extends State<CreateInfor> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFileUser(
                   textController: _controllerName,
-                  labelText: "Nhập tên bạn muốn thay đổi",
+                  labelText: "Enter the name you want to add",
                   hintText: 'Nhập tên',
                   onChanged: (value) {},
                 ),
@@ -49,7 +47,7 @@ class _CreateInforState extends State<CreateInfor> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFileUser(
                   textController: _controllerGmail,
-                  labelText: "Nhập gmail bạn muốn thay đổi",
+                  labelText: "Enter the gmail you want to add",
                   hintText: 'Nhập gmail',
                   onChanged: (value) {},
                 ),
@@ -58,7 +56,7 @@ class _CreateInforState extends State<CreateInfor> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFileUser(
                   textController: _controllerAddress,
-                  labelText: "Nhập địa chỉ bạn muốn thay đổi",
+                  labelText: "Enter the address you want to add",
                   hintText: 'Nhập địa chỉ',
                   onChanged: (value) {},
                 ),
@@ -67,7 +65,7 @@ class _CreateInforState extends State<CreateInfor> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFileUser(
                   textController: _controllerAge,
-                  labelText: "Nhập ngày sinh bạn muốn thay đổi",
+                  labelText: "Enter the date of birth you want to add",
                   hintText: 'Nhập ngày sinh',
                   onChanged: (value) {},
                 ),
@@ -76,20 +74,20 @@ class _CreateInforState extends State<CreateInfor> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFileUser(
                   textController: _controllerNationality,
-                  labelText: "Nhập quốc tịch bạn muốn thay đổi",
+                  labelText: "Enter the nationality you want to add",
                   hintText: 'Nhập quốc tịch',
                   onChanged: (value) {},
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerId,
-                  labelText: "Nhập id của bạn ",
-                  hintText: 'Nhập id',
-                  onChanged: (value) {},
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: TextFileUser(
+              //     textController: _controllerId,
+              //     labelText: "Nhập id của bạn muốn thêm ",
+              //     hintText: 'Nhập id',
+              //     onChanged: (value) {},
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -108,12 +106,13 @@ class _CreateInforState extends State<CreateInfor> {
                       id: _controllerId.text,
                     );
 
-                    _homeService.createData(newUser);
+                    HomeServices().createData(newUser);
 
-                    Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.homeScress, arguments: false);
                   },
                   child: const TextInfor(
-                    text: 'Thêm tài khoản',
+                    text: 'Add User',
                     colorText: Colors.black,
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/create_user/create_infor.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/edit_user/edit_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_infor.dart';
 import 'package:flutter_review/screens/home_screens/home_scress.dart';
 import 'package:flutter_review/screens/login/login.dart';
@@ -29,6 +30,8 @@ class AppRoutes {
         return ShowInfor(showUser: arguments as UserModel);
       case createData:
         return const CreateInfor();
+        case updateData:
+        return EditUser(users: arguments as UserModel,);
       default:
         throw 'Route  $routeName is not define';
     }
@@ -39,4 +42,5 @@ class AppRoutes {
   static const String homeScress = '/';
   static const String showInfor = '/show_infor';
   static const String createData = '/create_data';
+  static const String updateData = '/update_data';
 }

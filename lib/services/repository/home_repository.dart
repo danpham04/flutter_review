@@ -6,9 +6,9 @@ abstract class HomeRepository{
 
   Future<List<UserModel>> searchData();
 
-  Future<UserModel> deleteData(String id);
+  Future<bool> deleteData(String id);
 
-  Future<UserModel> updateData();
+  Future<UserModel> updateData(UserModel newUser, String id);
 
   Future<UserModel> createData(UserModel newUser);
   
