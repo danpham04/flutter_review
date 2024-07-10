@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
@@ -109,7 +110,7 @@ class _CreateInforState extends State<CreateInfor> {
 
                     _homeService.createData(newUser);
 
-                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(AppRoutes.homeScress);
                   },
                   child: const TextInfor(
                     text: 'Thêm tài khoản',

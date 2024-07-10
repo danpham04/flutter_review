@@ -7,19 +7,19 @@ import 'package:http/http.dart' as http;
 class HomeServices extends HomeRepository {
   @override
   Future<UserModel> createData(UserModel newUser) async {
-   try {
+    try {
       final response = await http.post(
-        Uri.parse(
-            "https://66879a5f0bc7155dc0184943.mockapi.io/api/v1/users/user"),
+        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(newUser.toMap()),
       );
+
       if (response.statusCode == 201) {
-        return newUser;
+        return UserModel.fromMap(jsonDecode(response.body));
       } else {
-        throw Exception('Fail create data');
+        throw Exception('Fail to create data');
       }
     } catch (e) {
       throw UnimplementedError();
