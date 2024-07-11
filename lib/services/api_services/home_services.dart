@@ -64,9 +64,22 @@ class HomeServices extends HomeRepository {
   }
 
   @override
-  Future<List<UserModel>> searchData() {
-    // TODO: implement searchData
-    throw UnimplementedError();
+  Future<List<UserModel>> searchData(String key, String query) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://66879c080bc7155dc0185037.mockapi.io/datauser/?$key=$query'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final List<UserModel> searchData = data.map((e) {
+          return UserModel.fromMap(e);
+        }).toList();
+        return searchData;
+      } else {
+        throw Exception('Failed to search data');
+      }
+    } catch (e) {
+      throw Exception('Error searching data: $e');
+    }
   }
 
   @override

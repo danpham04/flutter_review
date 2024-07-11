@@ -14,7 +14,9 @@ class AppBarShared extends StatelessWidget implements PreferredSizeWidget {
       this.heightAppBar = kToolbarHeight,
       this.colors = Colors.white,
       this.fontSize,
-      this.fontWeight});
+      this.fontWeight,
+      this.colorIcon,
+      this.colorBack});
   final bool centerTitle;
   final bool showLeading;
   final Widget? leading;
@@ -26,6 +28,8 @@ class AppBarShared extends StatelessWidget implements PreferredSizeWidget {
   final Color? colors;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final Color? colorIcon;
+  final Color? colorBack;
 
   @override
   Size get preferredSize => Size.fromHeight(heightAppBar);
@@ -33,6 +37,7 @@ class AppBarShared extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: colorBack,
       centerTitle: centerTitle,
       automaticallyImplyLeading: showLeading,
       leading: showLeading
@@ -44,7 +49,7 @@ class AppBarShared extends StatelessWidget implements PreferredSizeWidget {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: colors,
+                    color: colorIcon,
                     size: 24,
                   ))
           : null,
