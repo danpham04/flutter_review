@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const TextInfor(
-                                text: 'Confirmation Dialog',
+                                text: 'Delete User',
                               ),
                               content: const TextInfor(
                                   text: 'Are you sure you want to delete ?'),
@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
                                         AppRoutes.homeScress,
                                         arguments: false);
                                   },
-                                  child: const Text('Confirm'),
+                                  child: const Text('Delete'),
                                 ),
                               ],
                             );

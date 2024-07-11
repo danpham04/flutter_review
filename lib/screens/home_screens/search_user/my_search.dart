@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
@@ -19,6 +20,7 @@ class _MySearchState extends State<MySearch> {
 
   final HomeServices _homeServices = HomeServices();
   late TextEditingController _controllerSearch;
+  late String text;
   @override
   void initState() {
     _controllerSearch = TextEditingController();
@@ -49,9 +51,7 @@ class _MySearchState extends State<MySearch> {
         actions: [
           IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {
-              
-            },
+            onPressed: () => _filterDataUser(context),
           ),
         ],
       ),
@@ -60,7 +60,7 @@ class _MySearchState extends State<MySearch> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
-              onSubmitted: (value) {
+              onChanged: (value) {
                 if (value.isEmpty) {
                   setState(() {
                     userdata = [];
@@ -73,13 +73,24 @@ class _MySearchState extends State<MySearch> {
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: IconButton(
+                    onPressed: () {
+                      _controllerSearch.clear();
+                      setState(() {
+                        userdata = [];
+                      });
+                    },
+                    icon: IconButton(
                       onPressed: () {
-                        _controllerSearch.clear();
-                        setState(() {
-                          userdata = [];
-                        });
+                        text = _controllerSearch.text;
+                        if (text.isEmpty) {
+                          Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                        } else {
+                          _controllerSearch.text = '';
+                        }
                       },
-                      icon: const Icon(Icons.clear)),
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
                   hintText: 'Search.....',
                   border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)))),
@@ -97,6 +108,100 @@ class _MySearchState extends State<MySearch> {
                     ))
         ],
       ),
+    );
+  }
+
+  void _filterDataUser(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setSearch) {
+          return AlertDialog(
+            title: const Text('You want to search'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  RadioListTile<String>(
+                    value: 'id',
+                    title: const Text('ID'),
+                    groupValue: key,
+                    onChanged: (value) {
+                      setSearch(() {
+                        key = value!;
+                      });
+                      searchUser(_controllerSearch.text);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    value: 'name',
+                    title: const Text('Name'),
+                    groupValue: key,
+                    onChanged: (value) {
+                      setSearch(() {
+                        key = value!;
+                      });
+                      searchUser(_controllerSearch.text);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    value: 'address',
+                    title: const Text('Address'),
+                    groupValue: key,
+                    onChanged: (value) {
+                      setSearch(() {
+                        key = value!;
+                      });
+                      searchUser(_controllerSearch.text);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    value: 'mail',
+                    title: const Text('Gmail'),
+                    groupValue: key,
+                    onChanged: (value) {
+                      setSearch(() {
+                        key = value!;
+                      });
+                      searchUser(_controllerSearch.text);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    value: 'nationality',
+                    title: const Text('Nationality'),
+                    groupValue: key,
+                    onChanged: (value) {
+                      setSearch(() {
+                        key = value!;
+                      });
+                      searchUser(_controllerSearch.text);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                        const Color.fromARGB(255, 120, 178, 226))),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+      },
     );
   }
 }

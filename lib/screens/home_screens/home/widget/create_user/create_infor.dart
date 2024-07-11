@@ -106,7 +106,11 @@ class _CreateInforState extends State<CreateInfor> {
                       id: _controllerId.text,
                     );
 
-                    HomeServices().createData(newUser);
+                   try {
+                      HomeServices().createData(newUser);
+                   } catch (e) {
+                     rethrow;
+                   }
 
                     Navigator.of(context)
                         .pushNamed(AppRoutes.homeScress, arguments: false);

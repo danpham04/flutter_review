@@ -123,7 +123,7 @@ class _EditUserState extends State<EditUser> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const TextInfor(
-                            text: 'Confirmation Dialog',
+                            text: 'User Update',
                           ),
                           content: const TextInfor(
                               text:
@@ -140,9 +140,9 @@ class _EditUserState extends State<EditUser> {
                                 HomeServices().updateData(newUser, _user.id);
                                 Navigator.of(context).pushNamed(
                                     AppRoutes.homeScress,
-                                    arguments: true);
+                                    arguments: false);
                               },
-                              child: const Text('Confirm'),
+                              child: const Text('Update'),
                             ),
                           ],
                         );

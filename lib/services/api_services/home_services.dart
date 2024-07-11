@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/services/repository/home_repository.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +39,7 @@ class HomeServices extends HomeRepository {
 
       return loadData;
     } catch (e) {
-      rethrow;
+      throw UnimplementedError();
     }
   }
 
@@ -65,6 +64,7 @@ class HomeServices extends HomeRepository {
 
   @override
   Future<List<UserModel>> searchData(String key, String query) async {
+    final tmp = query.toLowerCase();
     try {
       final response = await http.get(Uri.parse(
           'https://66879c080bc7155dc0185037.mockapi.io/datauser/?$key=$query'));
@@ -73,12 +73,21 @@ class HomeServices extends HomeRepository {
         final List<UserModel> searchData = data.map((e) {
           return UserModel.fromMap(e);
         }).toList();
-        return searchData;
+
+        final List<UserModel> filterData = searchData.where((e) {
+          return e.id.toLowerCase().contains(tmp) ||
+              e.name!.toLowerCase().contains(tmp) ||
+              e.address!.toLowerCase().contains(tmp) ||
+              e.mail!.toLowerCase().contains(tmp) ||
+              e.nationality!.toLowerCase().contains(tmp);
+        }).toList();
+
+        return filterData;
       } else {
         throw Exception('Failed to search data');
       }
     } catch (e) {
-      throw Exception('Error searching data: $e');
+      throw Exception();
     }
   }
 

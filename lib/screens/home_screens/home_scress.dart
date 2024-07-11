@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
-import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/feed/feed.dart';
 import 'package:flutter_review/screens/home_screens/home/home.dart';
 import 'package:flutter_review/screens/home_screens/profile/profile.dart';
-import 'package:flutter_review/screens/home_screens/search_user/my_search.dart';
 import 'package:flutter_review/screens/home_screens/settings/settings.dart';
 import 'package:flutter_review/screens/home_screens/widget/tab_icon.dart';
 import 'package:flutter_review/screens/home_screens/widget/tabbar_home.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 
 class HomeScress extends StatefulWidget {
@@ -35,7 +32,7 @@ class _MyHomeState extends State<HomeScress> {
                 gradient: LinearGradient(colors: [
               Color.fromRGBO(185, 225, 231, 1),
               Color.fromARGB(255, 85, 180, 243)
-            ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           ),
           leading: const Icon(
             Icons.more_vert,
