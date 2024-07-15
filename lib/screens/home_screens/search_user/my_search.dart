@@ -97,15 +97,16 @@ class _MySearchState extends State<MySearch> {
             ),
           ),
           Expanded(
-              child: userdata.isEmpty
-                  ? const Center(child: Text('No value.....!'))
-                  : ListView.builder(
-                      itemCount: userdata.length,
-                      itemBuilder: (context, index) {
-                        final user = userdata[index];
-                        return InforUser(users: user);
-                      },
-                    ))
+            child: userdata.isEmpty
+                ? const Center(child: Text('No value.....!'))
+                : ListView.builder(
+                    itemCount: userdata.length,
+                    itemBuilder: (context, index) {
+                      final user = userdata[index];
+                      return InforUser(users: user);
+                    },
+                  ),
+          ),
         ],
       ),
     );

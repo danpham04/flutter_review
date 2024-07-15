@@ -7,14 +7,13 @@ import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, this.load = true});
-  final bool load;
+  const Home({super.key});
+
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  late bool _load;
   List<UserModel> _loadUser = [];
   final HomeServices _homeServices = HomeServices();
 
@@ -27,102 +26,136 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    _load = widget.load;
     super.initState();
+    getData();
   }
 
   @override
   void didChangeDependencies() {
-    if (_load) {
-      getData();
-    }
+    getData();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-            itemCount: _loadUser.length,
-            itemBuilder: (context, index) {
-              final UserModel user = _loadUser[index];
-              return Slidable(
-                key: Key(index.toString()),
-                endActionPane: ActionPane(
-                  motion: const ScrollMotion(),
-                  children: [
-                    SlidableAction(
-                      onPressed: (context) {
-                        Navigator.of(context)
-                            .pushNamed(AppRoutes.updateData, arguments: user);
-                      },
-                      backgroundColor: Colors.green,
-                      icon: Icons.change_circle,
-                      label: 'Change infor',
-                    ),
-                    SlidableAction(
-                      onPressed: (context) {
-                        // HomeServices().deleteData(user.id);
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const TextInfor(
-                                text: 'Delete User',
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: ListView.builder(
+          itemCount: _loadUser.length,
+          itemBuilder: (context, index) {
+            final UserModel user = _loadUser[index];
+            return Slidable(
+              key: Key(index.toString()),
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      // TODO
+                      Navigator.of(context).pushNamed(AppRoutes.updateData,
+                          arguments: _loadUser[index]);
+                    },
+                    backgroundColor: Colors.green,
+                    icon: Icons.change_circle,
+                    label: 'Change infor',
+                  ),
+                  SlidableAction(
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const TextInfor(
+                              text: 'Delete User',
+                            ),
+                            content: const TextInfor(
+                                text: 'Are you sure you want to delete ?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancel'),
                               ),
-                              content: const TextInfor(
-                                  text: 'Are you sure you want to delete ?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    HomeServices().deleteData(user.id);
-                                    Navigator.of(context).pushNamed(
-                                        AppRoutes.homeScress,
-                                        arguments: false);
-                                  },
-                                  child: const Text('Delete'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      backgroundColor: Colors.red,
-                      icon: Icons.delete,
-                      label: 'Delete',
-                    ),
-                  ],
-                ),
-                child: InforUser(users: user),
-              );
-            },
-          ),
+                              TextButton(
+                                onPressed: () {
+                                  // TODO
+                                  _deleteUser(user: user, index: index);
+                                },
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
+              ),
+              child: InforUser(users: user),
+            );
+          },
         ),
-        Positioned(
-          bottom: 40,
-          right: 25,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.createData);
-            },
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            child: const Icon(
-              Icons.add,
-              size: 30,
-            ),
-          ),
-        )
-      ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.createData);
+        },
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        child: const Icon(
+          Icons.add,
+          size: 30,
+        ),
+      ),
     );
+  }
+
+  void _deleteUser({required UserModel user, required index}) {
+    try {
+      _deleteDataUser(user.id);
+      _delete(index);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User delete successfully ${user.name}!'),
+        ),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to delete user. Please try again.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteDataUser(String id) async {
+    try {
+      if (await _homeServices.deleteData(id)) {
+        final tmp = await _homeServices.getData();
+        setState(() {
+          _loadUser = tmp;
+        });
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void _delete(int index) {
+    setState(() {
+      _loadUser.removeAt(index);
+    });
+  }
+
+  void _create(int index, UserModel data) {
+    setState(() {
+      _loadUser[index] = data;
+    });
   }
 }

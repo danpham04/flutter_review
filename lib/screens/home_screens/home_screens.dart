@@ -8,17 +8,12 @@ import 'package:flutter_review/screens/home_screens/widget/tab_icon.dart';
 import 'package:flutter_review/screens/home_screens/widget/tabbar_home.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 
-class HomeScress extends StatefulWidget {
+class HomeScress extends StatelessWidget {
   const HomeScress({
     super.key,
     this.load = true,
   });
   final bool load;
-  @override
-  State<HomeScress> createState() => _MyHomeState();
-}
-
-class _MyHomeState extends State<HomeScress> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -64,18 +59,17 @@ class _MyHomeState extends State<HomeScress> {
             ],
           ),
         ),
-        body: Center(
+        body: const Center(
           child: TabBarView(
             children: [
-              Home(
-                load: widget.load,
-              ),
-              const Feed(),
-              const Profile(),
-              const Settings(),
+              Home(),
+              Feed(),
+              Profile(),
+              Settings(),
             ],
           ),
         ),
+        
       ),
     );
   }

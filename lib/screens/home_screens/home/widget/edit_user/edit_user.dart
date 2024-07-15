@@ -25,13 +25,25 @@ class _EditUserState extends State<EditUser> {
   @override
   void initState() {
     _user = widget.users;
-    _controllerName = TextEditingController(text: _user.name);
-    _controllerGmail = TextEditingController(text: _user.mail);
-    _controllerAddress = TextEditingController(text: _user.address);
-    _controllerAge = TextEditingController(text: _user.dateOfBirth);
-    _controllerNationality = TextEditingController(text: _user.nationality);
-    _controllerImg = TextEditingController(text: _user.image);
+    _controllerName = TextEditingController(text: widget.users.name);
+    _controllerGmail = TextEditingController(text: widget.users.mail);
+    _controllerAddress = TextEditingController(text: widget.users.address);
+    _controllerAge = TextEditingController(text: widget.users.dateOfBirth);
+    _controllerNationality =
+        TextEditingController(text: widget.users.nationality);
+    _controllerImg = TextEditingController(text: widget.users.image);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controllerName.dispose();
+    _controllerGmail.dispose();
+    _controllerAge.dispose();
+    _controllerAddress.dispose();
+    _controllerNationality.dispose();
+    _controllerImg.dispose();
+    super.dispose();
   }
 
   @override
@@ -108,16 +120,6 @@ class _EditUserState extends State<EditUser> {
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
                   onPressed: () {
-                    UserModel newUser = UserModel(
-                      image: _controllerImg.text,
-                      name: _controllerName.text,
-                      mail: _controllerGmail.text,
-                      address: _controllerAddress.text,
-                      dateOfBirth: _controllerAge.text,
-                      nationality: _controllerNationality.text,
-                      id: _user.id,
-                    );
-
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -137,10 +139,7 @@ class _EditUserState extends State<EditUser> {
                             ),
                             TextButton(
                               onPressed: () {
-                                HomeServices().updateData(newUser, _user.id);
-                                Navigator.of(context).pushNamed(
-                                    AppRoutes.homeScress,
-                                    arguments: false);
+                                _showSnack();
                               },
                               child: const Text('Update'),
                             ),
@@ -160,5 +159,56 @@ class _EditUserState extends State<EditUser> {
         ),
       ),
     );
+  }
+
+  void _showSnack() {
+    try {
+      _createData();
+      if (mounted) {
+        setState(() {
+          widget.users.name = _controllerName.text;
+          widget.users.mail = _controllerGmail.text;
+          widget.users.dateOfBirth = _controllerAge.text;
+          widget.users.address = _controllerAddress.text;
+          widget.users.nationality = _controllerNationality.text;
+          widget.users.image = _controllerImg.text;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User ${_controllerName.text} updated successfully!'),
+          ),
+        );
+        Navigator.of(context).pushNamed(AppRoutes.homeScress);
+        // Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to update user. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _createData() async {
+    UserModel newUser = UserModel(
+      image: _controllerImg.text,
+      name: _controllerName.text,
+      mail: _controllerGmail.text,
+      address: _controllerAddress.text,
+      dateOfBirth: _controllerAge.text,
+      nationality: _controllerNationality.text,
+      id: _user.id,
+    );
+    // TODO: Thiếu gọi  async  , await phải gọi Future trước khi xử lý
+    // TODO: chia 2 TH call api thành công push màn, TH2 không thành công show lêm lỗi
+
+    try {
+      await HomeServices().updateData(newUser: newUser, id: _user.id);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

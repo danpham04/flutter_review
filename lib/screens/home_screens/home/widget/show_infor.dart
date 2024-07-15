@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/edit_user/edit_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
+import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 
 class ShowInfor extends StatelessWidget {
@@ -19,8 +22,8 @@ class ShowInfor extends StatelessWidget {
             padding: const EdgeInsets.all(42.0),
             child: Center(
               child: Container(
-                width: 300,
-                height: 300,
+                width: 330,
+                height: 310,
                 padding: const EdgeInsets.only(top: 10),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -42,6 +45,30 @@ class ShowInfor extends StatelessWidget {
                       TextInfor(text: 'Địa chỉ: ${showUser.address}'),
                       TextInfor(text: 'Năm sinh: ${showUser.dateOfBirth}'),
                       TextInfor(text: 'Quốc tịch: ${showUser.nationality}'),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 4.0, left: 10, right: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(
+                                      AppRoutes.updateData,
+                                      arguments: showUser);
+                                },
+                                child: const TextInfor(text: 'Edit User')),
+                            ElevatedButton(
+                                onPressed: () {
+                                  _confirmDelete(context);
+                                },
+                                child: const TextInfor(text: 'Delete User'))
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -73,6 +100,33 @@ class ShowInfor extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this user?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                HomeServices().deleteData(showUser.id);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

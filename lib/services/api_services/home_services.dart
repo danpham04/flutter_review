@@ -52,6 +52,7 @@ class HomeServices extends HomeRepository {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+     
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -92,7 +93,7 @@ class HomeServices extends HomeRepository {
   }
 
   @override
-  Future<UserModel> updateData(UserModel newUser, String id) async {
+  Future<UserModel> updateData({required UserModel newUser,required String id}) async {
     try {
       final response = await http.put(
         Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser/$id"),
@@ -101,7 +102,7 @@ class HomeServices extends HomeRepository {
         },
         body: jsonEncode(newUser.toMap()),
       );
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
         return UserModel.fromMap(jsonDecode(response.body));
       } else {

@@ -22,6 +22,17 @@ class _CreateInforState extends State<CreateInfor> {
   final TextEditingController _controllerId = TextEditingController();
 
   @override
+  void dispose() {
+    _controllerName.dispose();
+    _controllerGmail.dispose();
+    _controllerAddress.dispose();
+    _controllerAge.dispose();
+    _controllerNationality.dispose();
+    _controllerId.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -79,15 +90,6 @@ class _CreateInforState extends State<CreateInfor> {
                   onChanged: (value) {},
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: TextFileUser(
-              //     textController: _controllerId,
-              //     labelText: "Nhập id của bạn muốn thêm ",
-              //     hintText: 'Nhập id',
-              //     onChanged: (value) {},
-              //   ),
-              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -95,25 +97,8 @@ class _CreateInforState extends State<CreateInfor> {
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
                   onPressed: () {
-                    UserModel newUser = UserModel(
-                      image:
-                          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
-                      name: _controllerName.text,
-                      mail: _controllerGmail.text,
-                      address: _controllerAddress.text,
-                      dateOfBirth: _controllerAge.text,
-                      nationality: _controllerNationality.text,
-                      id: _controllerId.text,
-                    );
-
-                   try {
-                      HomeServices().createData(newUser);
-                   } catch (e) {
-                     rethrow;
-                   }
-
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.homeScress, arguments: false);
+                    _showSnack();
+                    setState(() {});
                   },
                   child: const TextInfor(
                     text: 'Add User',
@@ -126,5 +111,45 @@ class _CreateInforState extends State<CreateInfor> {
         ),
       ),
     );
+  }
+
+  void _showSnack() {
+    try {
+      _addData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User create successfully!'),
+        ),
+      );
+
+      // Navigator.of(context).pushNamed(AppRoutes.homeScress);
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to create user. Please try again.'),
+        ),
+      );
+    }
+    // _addData();
+  }
+
+  Future<void> _addData() async {
+    UserModel newUser = UserModel(
+      image:
+          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
+      name: _controllerName.text,
+      mail: _controllerGmail.text,
+      address: _controllerAddress.text,
+      dateOfBirth: _controllerAge.text,
+      nationality: _controllerNationality.text,
+      id: _controllerId.text,
+    );
+
+    try {
+      await HomeServices().createData(newUser);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

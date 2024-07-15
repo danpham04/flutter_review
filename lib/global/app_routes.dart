@@ -3,7 +3,7 @@ import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/create_user/create_infor.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/edit_user/edit_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_infor.dart';
-import 'package:flutter_review/screens/home_screens/home_scress.dart';
+import 'package:flutter_review/screens/home_screens/home_screens.dart';
 import 'package:flutter_review/screens/home_screens/search_user/my_search.dart';
 import 'package:flutter_review/screens/login/login.dart';
 
