@@ -17,7 +17,7 @@ class MySearch extends StatefulWidget {
 class _MySearchState extends State<MySearch> {
   List<UserModel> userdata = [];
   String key = 'id';
-
+  List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
   final HomeServices _homeServices = HomeServices();
   late TextEditingController _controllerSearch;
   late String text;
@@ -42,8 +42,19 @@ class _MySearchState extends State<MySearch> {
   }
 
   @override
+  void dispose() {
+    _controllerSearch.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(key);
+        },
+      ),
       appBar: AppBarShared(
         titleName: 'Search User',
         colors: Colors.black,
@@ -66,7 +77,9 @@ class _MySearchState extends State<MySearch> {
                     userdata = [];
                   });
                 } else {
-                  searchUser(value);
+                  setState(() {
+                    searchUser(value);
+                  });
                 }
               },
               controller: _controllerSearch,
@@ -121,71 +134,26 @@ class _MySearchState extends State<MySearch> {
           return AlertDialog(
             title: const Text('You want to search'),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  RadioListTile<String>(
-                    value: 'id',
-                    title: const Text('ID'),
-                    groupValue: key,
-                    onChanged: (value) {
-                      setSearch(() {
-                        key = value!;
+                child: SizedBox(
+              width: 250,
+              height: 280,
+              child: ListView.builder(
+                itemCount: listTilte.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RadioListTile(
+                      value: listTilte[index].toLowerCase(),
+                      title: Text(listTilte[index]),
+                      groupValue: key,
+                      onChanged: (value) {
+                        setState(() {
+                          key = value!;
+                        });
+                        searchUser(_controllerSearch.text);
+                        Navigator.pop(context);
                       });
-                      searchUser(_controllerSearch.text);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  RadioListTile<String>(
-                    value: 'name',
-                    title: const Text('Name'),
-                    groupValue: key,
-                    onChanged: (value) {
-                      setSearch(() {
-                        key = value!;
-                      });
-                      searchUser(_controllerSearch.text);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  RadioListTile<String>(
-                    value: 'address',
-                    title: const Text('Address'),
-                    groupValue: key,
-                    onChanged: (value) {
-                      setSearch(() {
-                        key = value!;
-                      });
-                      searchUser(_controllerSearch.text);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  RadioListTile<String>(
-                    value: 'mail',
-                    title: const Text('Gmail'),
-                    groupValue: key,
-                    onChanged: (value) {
-                      setSearch(() {
-                        key = value!;
-                      });
-                      searchUser(_controllerSearch.text);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  RadioListTile<String>(
-                    value: 'nationality',
-                    title: const Text('Nationality'),
-                    groupValue: key,
-                    onChanged: (value) {
-                      setSearch(() {
-                        key = value!;
-                      });
-                      searchUser(_controllerSearch.text);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+                },
               ),
-            ),
+            )),
             actions: [
               TextButton(
                 style: ButtonStyle(

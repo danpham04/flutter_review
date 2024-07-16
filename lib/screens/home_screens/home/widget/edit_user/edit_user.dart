@@ -138,8 +138,9 @@ class _EditUserState extends State<EditUser> {
                               child: const Text('Cancel'),
                             ),
                             TextButton(
-                              onPressed: () {
-                                _showSnack();
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                await _showSnack();
                               },
                               child: const Text('Update'),
                             ),
@@ -161,9 +162,9 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
-  void _showSnack() {
+  Future<void> _showSnack() async {
     try {
-      _createData();
+      await _createData();
       if (mounted) {
         setState(() {
           widget.users.name = _controllerName.text;
@@ -179,7 +180,6 @@ class _EditUserState extends State<EditUser> {
           ),
         );
         Navigator.of(context).pushNamed(AppRoutes.homeScress);
-        // Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
@@ -202,8 +202,6 @@ class _EditUserState extends State<EditUser> {
       nationality: _controllerNationality.text,
       id: _user.id,
     );
-    // TODO: Thiếu gọi  async  , await phải gọi Future trước khi xử lý
-    // TODO: chia 2 TH call api thành công push màn, TH2 không thành công show lêm lỗi
 
     try {
       await HomeServices().updateData(newUser: newUser, id: _user.id);
