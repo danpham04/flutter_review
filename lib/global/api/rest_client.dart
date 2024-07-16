@@ -18,7 +18,9 @@ class RestClient {
     );
     // khoi tao dio chung voi option chung cho toan bo project
     _dio = Dio(options);
-
+    //TODO
+// tìm hiểu về interceptors trong dio để làm gì và có ý nghĩa gì: tìm hiểu 3 thằng onRequest, on response, onError/
+//Làm lại bài tập với base dio và tìm hiểu các thành phần trong nó với nhánh develop
     _dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
