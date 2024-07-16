@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:flutter_review/global/api/api_error.dart';
+import 'package:flutter_review/global/api/rest_client.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/services/repository/home_repository.dart';
 import 'package:http/http.dart' as http;
 
 class HomeServices extends HomeRepository {
+  final RestClient _restClient =
+      RestClient(baseURL: "https://66879c080bc7155dc0185037.mockapi.io");
   @override
   Future<UserModel> createData(UserModel newUser) async {
     try {
@@ -28,18 +32,19 @@ class HomeServices extends HomeRepository {
   @override
   Future<List<UserModel>> getData() async {
     try {
-      final response = await http.get(
-          Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser'));
-      final data = jsonDecode(response.body);
-      final users = data as List<dynamic>;
+      final response = await _restClient.get("/datauser1");
+      if (response is List<dynamic>) {
+        final users = response;
 
-      final List<UserModel> loadData = users.map((e) {
-        return UserModel.fromMap(e);
-      }).toList();
+        final List<UserModel> loadData = users.map((e) {
+          return UserModel.fromMap(e);
+        }).toList();
 
-      return loadData;
-    } catch (e) {
-      throw UnimplementedError();
+        return loadData;
+      }
+      throw ApiError.fromResponse(response);
+    } catch (error) {
+      rethrow;
     }
   }
 
@@ -47,7 +52,7 @@ class HomeServices extends HomeRepository {
   Future<bool> deleteData(String id) async {
     try {
       final response = await http.delete(
-        Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id'),
+        Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -97,7 +102,7 @@ class HomeServices extends HomeRepository {
       {required UserModel newUser, required String id}) async {
     try {
       final response = await http.put(
-        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id"),
+        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser/$id"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

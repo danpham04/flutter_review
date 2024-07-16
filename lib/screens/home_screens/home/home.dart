@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
@@ -18,10 +19,18 @@ class _HomeState extends State<Home> {
   final HomeServices _homeServices = HomeServices();
 
   Future<void> getData() async {
-    final List<UserModel> temp = await _homeServices.getData();
-    setState(() {
-      _loadUser = temp;
-    });
+    try {
+      final List<UserModel> temp = await _homeServices.getData();
+      setState(() {
+        _loadUser = temp;
+      });
+      // ignore: non_constant_identifier_names
+    } catch (e) {
+      ApiError error = e as ApiError;
+      print(error.errorCode);
+      print(error.extraData);
+      _showMessenger(error.message.toString());
+    }
   }
 
   @override
@@ -30,11 +39,11 @@ class _HomeState extends State<Home> {
     getData();
   }
 
-  @override
-  void didChangeDependencies() {
-    getData();
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   getData();
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
