@@ -36,7 +36,7 @@ class HomeServices extends HomeRepository {
       final List<UserModel> loadData = users.map((e) {
         return UserModel.fromMap(e);
       }).toList();
-      
+
       return loadData;
     } catch (e) {
       throw UnimplementedError();
@@ -47,7 +47,7 @@ class HomeServices extends HomeRepository {
   Future<bool> deleteData(String id) async {
     try {
       final response = await http.delete(
-        Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser/$id'),
+        Uri.parse('https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -97,7 +97,7 @@ class HomeServices extends HomeRepository {
       {required UserModel newUser, required String id}) async {
     try {
       final response = await http.put(
-        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser/$id"),
+        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

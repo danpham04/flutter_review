@@ -96,9 +96,9 @@ class _CreateInforState extends State<CreateInfor> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
-                  onPressed: () {
-                    _showSnack();
-                    setState(() {});
+                  onPressed: () async {
+                    await _showSnack();
+                    Navigator.of(context).pop();
                   },
                   child: const TextInfor(
                     text: 'Add User',
@@ -113,17 +113,16 @@ class _CreateInforState extends State<CreateInfor> {
     );
   }
 
-  void _showSnack() {
+  Future<void> _showSnack() async {
     try {
-      _addData();
+      await _addData();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('User create successfully!'),
         ),
       );
 
-      // Navigator.of(context).pushNamed(AppRoutes.homeScress);
-      Navigator.of(context).pop();
+      Navigator.of(context).pushNamed(AppRoutes.homeScress);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

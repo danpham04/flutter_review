@@ -81,7 +81,11 @@ class _HomeState extends State<Home> {
                               TextButton(
                                 onPressed: () {
                                   // TODO
-                                  _deleteUser(user: user, index: index);
+                                  Navigator.of(context).pop();
+                                  _deleteUser(
+                                      user: user,
+                                      index: index,
+                                      context: context);
                                 },
                                 child: const Text('Delete'),
                               ),
@@ -115,35 +119,36 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _deleteUser({required UserModel user, required index}) {
-    try {
-      _deleteDataUser(user.id);
-      _delete(index);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User delete successfully ${user.name}!'),
-        ),
-      );
-      Navigator.of(context).pop();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to delete user. Please try again.'),
-        ),
-      );
+  Future<void> _deleteUser(
+      {required UserModel user,
+      required index,
+      required BuildContext context}) async {
+    _delete(index);
+
+    bool checkDeleteUser = await _deleteDataUser(user.id);
+
+    if (checkDeleteUser) {
+      _showMessenger('Xóa thành công ');
+    } else {
+      _showMessenger('Failed to delete user. Please try again.');
+      _create(index, user);
     }
   }
 
-  Future<void> _deleteDataUser(String id) async {
+  void _showMessenger(String content) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(content),
+      ),
+    );
+  }
+
+  Future<bool> _deleteDataUser(String id) async {
     try {
-      if (await _homeServices.deleteData(id)) {
-        final tmp = await _homeServices.getData();
-        setState(() {
-          _loadUser = tmp;
-        });
-      }
+      await _homeServices.deleteData(id);
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 

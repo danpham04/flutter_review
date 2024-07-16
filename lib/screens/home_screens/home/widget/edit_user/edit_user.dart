@@ -120,34 +120,7 @@ class _EditUserState extends State<EditUser> {
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const TextInfor(
-                            text: 'User Update',
-                          ),
-                          content: const TextInfor(
-                              text:
-                                  'Are you sure you want to update the user ?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                await _showSnack();
-                              },
-                              child: const Text('Update'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    _showDialog();
                   },
                   child: const TextInfor(
                     text: 'Update user',
@@ -162,9 +135,49 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const TextInfor(
+            text: 'User Update',
+          ),
+          content: const TextInfor(
+              text: 'Are you sure you want to update the user ?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _showSnack();
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _showSnack() async {
     try {
-      await _createData();
+      UserModel newUser = UserModel(
+        image: _controllerImg.text,
+        name: _controllerName.text,
+        mail: _controllerGmail.text,
+        address: _controllerAddress.text,
+        dateOfBirth: _controllerAge.text,
+        nationality: _controllerNationality.text,
+        id: _user.id,
+      );
+
+      await HomeServices().updateData(newUser: newUser, id: _user.id);
       if (mounted) {
         setState(() {
           widget.users.name = _controllerName.text;
@@ -189,24 +202,6 @@ class _EditUserState extends State<EditUser> {
           ),
         );
       }
-    }
-  }
-
-  Future<void> _createData() async {
-    UserModel newUser = UserModel(
-      image: _controllerImg.text,
-      name: _controllerName.text,
-      mail: _controllerGmail.text,
-      address: _controllerAddress.text,
-      dateOfBirth: _controllerAge.text,
-      nationality: _controllerNationality.text,
-      id: _user.id,
-    );
-
-    try {
-      await HomeServices().updateData(newUser: newUser, id: _user.id);
-    } catch (e) {
-      rethrow;
     }
   }
 }
