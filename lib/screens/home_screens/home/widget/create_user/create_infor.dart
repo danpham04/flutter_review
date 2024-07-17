@@ -113,43 +113,37 @@ class _CreateInforState extends State<CreateInfor> {
     );
   }
 
-  void _showSnack() {
+  Future<void> _showSnack() async {
     try {
-      _addData();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User create successfully!'),
-        ),
+      UserModel newUser = UserModel(
+        image:
+            "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
+        name: _controllerName.text,
+        mail: _controllerGmail.text,
+        address: _controllerAddress.text,
+        dateOfBirth: _controllerAge.text,
+        nationality: _controllerNationality.text,
+        id: _controllerId.text,
       );
+      await HomeServices().createData(newUser);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User create successfully!'),
+          ),
+        );
 
-      // Navigator.of(context).pushNamed(AppRoutes.homeScress);
-      Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.homeScress);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to create user. Please try again.'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create user. Please try again.'),
+          ),
+        );
+      }
     }
     // _addData();
-  }
-
-  Future<void> _addData() async {
-    UserModel newUser = UserModel(
-      image:
-          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
-      name: _controllerName.text,
-      mail: _controllerGmail.text,
-      address: _controllerAddress.text,
-      dateOfBirth: _controllerAge.text,
-      nationality: _controllerNationality.text,
-      id: _controllerId.text,
-    );
-
-    try {
-      await HomeServices().createData(newUser);
-    } catch (e) {
-      rethrow;
-    }
   }
 }

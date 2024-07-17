@@ -164,7 +164,17 @@ class _EditUserState extends State<EditUser> {
 
   Future<void> _showSnack() async {
     try {
-      await _createData();
+      UserModel newUser = UserModel(
+        image: _controllerImg.text,
+        name: _controllerName.text,
+        mail: _controllerGmail.text,
+        address: _controllerAddress.text,
+        dateOfBirth: _controllerAge.text,
+        nationality: _controllerNationality.text,
+        id: _user.id,
+      );
+      await HomeServices().updateData(newUser: newUser, id: _user.id);
+
       if (mounted) {
         setState(() {
           widget.users.name = _controllerName.text;
@@ -189,24 +199,6 @@ class _EditUserState extends State<EditUser> {
           ),
         );
       }
-    }
-  }
-
-  Future<void> _createData() async {
-    UserModel newUser = UserModel(
-      image: _controllerImg.text,
-      name: _controllerName.text,
-      mail: _controllerGmail.text,
-      address: _controllerAddress.text,
-      dateOfBirth: _controllerAge.text,
-      nationality: _controllerNationality.text,
-      id: _user.id,
-    );
-
-    try {
-      await HomeServices().updateData(newUser: newUser, id: _user.id);
-    } catch (e) {
-      rethrow;
     }
   }
 }

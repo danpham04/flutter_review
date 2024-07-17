@@ -4,6 +4,7 @@ import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
+import 'package:flutter_review/widgets/progress_shared.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Home extends StatefulWidget {
@@ -41,7 +42,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: ListView.builder(
+        child: _loadUser.isEmpty
+        ? const ProgressShared()
+        : ListView.builder(
           itemCount: _loadUser.length,
           itemBuilder: (context, index) {
             final UserModel user = _loadUser[index];
@@ -79,9 +82,10 @@ class _HomeState extends State<Home> {
                                 child: const Text('Cancel'),
                               ),
                               TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   // TODO
-                                  _deleteUser(user: user, index: index);
+                                  Navigator.of(context).pop();
+                                  await _deleteUser(user: user, index: index);
                                 },
                                 child: const Text('Delete'),
                               ),
@@ -115,35 +119,31 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _deleteUser({required UserModel user, required index}) {
-    try {
-      _deleteDataUser(user.id);
-      _delete(index);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User delete successfully ${user.name}!'),
-        ),
-      );
-      Navigator.of(context).pop();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to delete user. Please try again.'),
-        ),
-      );
+  Future<void> _deleteUser({required UserModel user, required index}) async {
+    _delete(index);
+    bool checkDeleteUser = await _deleteDataUser(user.id);
+    if (checkDeleteUser) {
+      _showMessenger('User delete successfully ${user.name}!');
+    } else {
+      _showMessenger('Failed to delete user. Please try again.');
+      _create(index, user);
     }
   }
 
-  Future<void> _deleteDataUser(String id) async {
+  void _showMessenger(String content) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(content),
+      ),
+    );
+  }
+
+  Future<bool> _deleteDataUser(String id) async {
     try {
-      if (await _homeServices.deleteData(id)) {
-        final tmp = await _homeServices.getData();
-        setState(() {
-          _loadUser = tmp;
-        });
-      }
+      await _homeServices.deleteData(id);
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 
