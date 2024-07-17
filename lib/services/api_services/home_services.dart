@@ -97,7 +97,7 @@ class HomeServices extends HomeRepository {
       {required UserModel newUser, required String id}) async {
     try {
       final response = await http.put(
-        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id"),
+        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser/$id"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
