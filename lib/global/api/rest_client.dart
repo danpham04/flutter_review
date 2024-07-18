@@ -12,7 +12,7 @@ class RestClient {
         receiveTimeout: const Duration(seconds: 5),
         contentType: jsonContentType);
     _dio = Dio(options);
-    
+
     _dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -24,13 +24,13 @@ class RestClient {
   }
 
   Future<dynamic> get(
-    String path,
+    String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
-  ) async {
+  }) async {
     try {
       final Response<dynamic> response = await _dio.get(
         path,
@@ -47,13 +47,13 @@ class RestClient {
   }
 
   Future<dynamic> post(
-    String path,
+    String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
-  ) async {
+  }) async {
     try {
       final Response<dynamic> response = await _dio.post(
         path,
@@ -70,13 +70,13 @@ class RestClient {
   }
 
   Future<dynamic> put(
-    String path,
+    String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
-  ) async {
+  }) async {
     try {
       final Response<dynamic> response = await _dio.put(
         path,
@@ -94,10 +94,11 @@ class RestClient {
 
   Future<dynamic> delete(
     String path,
-    Object? data,
+    {Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
+    }
   ) async {
     try {
       final Response<dynamic> response = await _dio.delete(
@@ -115,11 +116,11 @@ class RestClient {
 
   Future<dynamic> patch(
     String path,
-    Object? data,
+    {Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-    void Function(int, int)? onReceiveProgress,
+    void Function(int, int)? onReceiveProgress,}
   ) async {
     try {
       final Response<dynamic> response = await _dio.patch(
@@ -134,8 +135,6 @@ class RestClient {
     } catch (e) {
       throw _mapError(e);
     }
-
-    
   }
 
   ApiError _mapError(dynamic e) {
