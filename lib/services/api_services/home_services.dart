@@ -64,10 +64,12 @@ class HomeServices extends HomeRepository {
   Future<List<UserModel>> searchData(String key, String query) async {
     final tmp = query.toLowerCase();
     try {
-      final response = await http.get(Uri.parse(
-          'https://66879c080bc7155dc0185037.mockapi.io/datauser/?$key=$query'));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+      final response = await _restClient.get("/datauser",
+      queryParameters: {key: query});
+
+      if (response is List<dynamic>) {
+        final data = response;
+
         final List<UserModel> searchData = data.map((e) {
           return UserModel.fromMap(e);
         }).toList();
@@ -81,11 +83,11 @@ class HomeServices extends HomeRepository {
         }).toList();
 
         return filterData;
-      } else {
-        throw Exception('Failed to search data');
       }
-    } catch (e) {
-      throw Exception();
+
+      throw ApiError.fromResponse(response);
+    } catch (error) {
+      rethrow;
     }
   }
 
@@ -93,21 +95,17 @@ class HomeServices extends HomeRepository {
   Future<UserModel> updateData(
       {required UserModel newUser, required String id}) async {
     try {
-      final response = await http.put(
-        Uri.parse("https://66879c080bc7155dc0185037.mockapi.io/datauser1/$id"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(newUser.toMap()),
+      final response = await _restClient.put(
+        "/datauser/$id",
+        data: newUser.toMap(),
       );
 
-      if (response.statusCode == 200) {
-        return UserModel.fromMap(jsonDecode(response.body));
-      } else {
-        throw Exception('Fail to update data');
+      if (response is Map<String, dynamic>) {
+        return UserModel.fromMap(response);
       }
-    } catch (e) {
-      throw UnimplementedError();
+      throw ApiError.fromResponse(response);
+    } catch (error) {
+      rethrow;
     }
   }
 }

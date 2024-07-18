@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
@@ -187,21 +189,30 @@ class _EditUserState extends State<EditUser> {
           widget.users.nationality = _controllerNationality.text;
           widget.users.image = _controllerImg.text;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('User ${_controllerName.text} updated successfully!'),
-          ),
-        );
+        _showMessenger('User ${_controllerName.text} updated successfully!');
         Navigator.of(context).pushNamed(AppRoutes.homeScress);
       }
     } catch (e) {
+      ApiError error = e as ApiError;
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to update user. Please try again.'),
-          ),
-        );
+        
+        _showMessenger(error.message.toString());
       }
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Failed to update user. Please try again.'),
+      //     ),
+      //   );
+      // }
     }
+  }
+
+  void _showMessenger(String content) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(content),
+      ),
+    );
   }
 }
