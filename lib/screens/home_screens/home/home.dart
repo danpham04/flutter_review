@@ -38,18 +38,16 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  void didChangeDependencies() {
-    getData();
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: _loadUser.isEmpty
             ? const ProgressShared()
+            // nếu mà loadusser isempty isLoading  = false thì show ra sizebox (không có du liệu)
+            // isLoading = true khi call api, bằng false khi call api thành công và thất bại
+            // nếu isLoading = false loadUser.isempty show (text không có dũ liệu)
+            // nếu loadUser có dữ liệu show lên data
             : ListView.builder(
                 itemCount: _loadUser.length,
                 itemBuilder: (context, index) {
