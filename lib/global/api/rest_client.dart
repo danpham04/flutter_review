@@ -13,6 +13,32 @@ class RestClient {
         contentType: jsonContentType);
     _dio = Dio(options);
 
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+          // Có thể custom lại cục options. header hay vân vân trước khi request api lên server
+
+          // print(options.headers);
+          return handler.next(options);
+        },
+        onResponse: (Response response, ResponseInterceptorHandler handler) {
+          // cung cấp các response trả về bao gồm đầy đủ các thành phần như có thể oin ra trong prettyDiologger
+          return handler.next(response);
+        },
+        onError: (DioException error, ErrorInterceptorHandler handler) {
+          // Bắt lỗi trả về từ phía api sau đó làm các nhiệm vụ mà mình muốn làm
+          // ví dụ bắt được lỗi 401 là unAuthrize là lỗi khoiong thể kết nối được api vì token hết hạn
+          // Bình thường các app ngân hàng, tài chính -> trả về màn hình login
+          // Các app bình thường nếu nhận biết được hết token lỗi 401 thì tự call lại api resfresh token hay api login ngầm để sử dụng
+          // print(error.response);
+          if (error.response.toString() == "Not found") {
+            // lối nhảy vào đây là not found thì sẽ làm nhiệm vụ gì đó
+            // Navigator.pushNamed(context, routeName)
+          }
+          return handler.next(error);
+        },
+      ),
+    );
     _dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -93,13 +119,12 @@ class RestClient {
   }
 
   Future<dynamic> delete(
-    String path,
-    {Object? data,
+    String path, {
+    Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-    }
-  ) async {
+  }) async {
     try {
       final Response<dynamic> response = await _dio.delete(
         path,
@@ -115,13 +140,13 @@ class RestClient {
   }
 
   Future<dynamic> patch(
-    String path,
-    {Object? data,
+    String path, {
+    Object? data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-    void Function(int, int)? onReceiveProgress,}
-  ) async {
+    void Function(int, int)? onReceiveProgress,
+  }) async {
     try {
       final Response<dynamic> response = await _dio.patch(
         path,
