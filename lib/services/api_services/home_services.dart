@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/api/rest_client.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/services/repository/home_repository.dart';
-import 'package:http/http.dart' as http;
 
 class HomeServices extends HomeRepository {
   final RestClient _restClient =
@@ -49,7 +46,7 @@ class HomeServices extends HomeRepository {
   Future<bool> deleteData(String id) async {
     try {
       final response = await _restClient.delete(
-        "/datauser/$id",
+        "/datauser1/$id",
       );
       if (response is Map<String, dynamic>) {
         return true;
@@ -64,8 +61,8 @@ class HomeServices extends HomeRepository {
   Future<List<UserModel>> searchData(String key, String query) async {
     final tmp = query.toLowerCase();
     try {
-      final response = await _restClient.get("/datauser",
-      queryParameters: {key: query});
+      final response =
+          await _restClient.get("/datauser", queryParameters: {key: query});
 
       if (response is List<dynamic>) {
         final data = response;

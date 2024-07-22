@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
+import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
+import 'package:flutter_review/widgets/show_messenger.dart';
+import 'package:provider/provider.dart';
 
 class CreateInfor extends StatefulWidget {
   const CreateInfor({super.key});
@@ -126,25 +129,30 @@ class _CreateInforState extends State<CreateInfor> {
         nationality: _controllerNationality.text,
         id: _controllerId.text,
       );
-      await HomeServices().createData(newUser);
+      // await HomeServices().createData(newUser);
+      await Provider.of<ProviderHome>(context, listen: false).createUser(newUser: newUser);
+      showCustomMess(content: 'User create successfully!');
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('User create successfully!'),
-          ),
-        );
-
-        
-      }
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('User create successfully!'),
+      //     ),
+      //   );
+      // }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to create user. Please try again.'),
-          ),
-        );
-      }
+      showCustomMess(content: 'Failed to create user. Please try again.');
+      
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Failed to create user. Please try again.'),
+      //     ),
+      //   );
+      // }
     }
+  }
+  showCustomMess({required String content}) {
+    ShowMessengers.showMessenger(context: context, content: content);
   }
 }
