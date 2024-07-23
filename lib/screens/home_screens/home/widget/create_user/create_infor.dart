@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
-import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/create_user/pading_text.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:flutter_review/widgets/show_messenger.dart';
 import 'package:provider/provider.dart';
@@ -48,50 +47,30 @@ class _CreateInforState extends State<CreateInfor> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerName,
-                  labelText: "Enter the name you want to add",
-                  hintText: 'Nhập tên',
-                  onChanged: (value) {},
-                ),
+              PadingText(
+                labelText: "Enter the name you want to add",
+                hintText: 'Nhập tên',
+                textController: _controllerName,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerGmail,
-                  labelText: "Enter the gmail you want to add",
-                  hintText: 'Nhập gmail',
-                  onChanged: (value) {},
-                ),
+              PadingText(
+                labelText: "Enter the gmail you want to add",
+                hintText: 'Nhập gmail',
+                textController: _controllerGmail,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerAddress,
-                  labelText: "Enter the address you want to add",
-                  hintText: 'Nhập địa chỉ',
-                  onChanged: (value) {},
-                ),
+              PadingText(
+                labelText: "Enter the address you want to add",
+                hintText: 'Nhập địa chỉ',
+                textController: _controllerAddress,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerAge,
-                  labelText: "Enter the date of birth you want to add",
-                  hintText: 'Nhập ngày sinh',
-                  onChanged: (value) {},
-                ),
+              PadingText(
+                labelText: "Enter the date of birth you want to add",
+                hintText: 'Nhập ngày sinh',
+                textController: _controllerAge,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerNationality,
-                  labelText: "Enter the nationality you want to add",
-                  hintText: 'Nhập quốc tịch',
-                  onChanged: (value) {},
-                ),
+              PadingText(
+                labelText: "Enter the nationality you want to add",
+                hintText: 'Nhập quốc tịch',
+                textController: _controllerNationality,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -102,7 +81,6 @@ class _CreateInforState extends State<CreateInfor> {
                   onPressed: () async {
                     Navigator.of(context).pushNamed(AppRoutes.homeScress);
                     await _showSnack();
-                    
                   },
                   child: const TextInfor(
                     text: 'Add User',
@@ -118,40 +96,31 @@ class _CreateInforState extends State<CreateInfor> {
   }
 
   Future<void> _showSnack() async {
-    try {
-      UserModel newUser = UserModel(
-        image:
-            "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
-        name: _controllerName.text,
-        mail: _controllerGmail.text,
-        address: _controllerAddress.text,
-        dateOfBirth: _controllerAge.text,
-        nationality: _controllerNationality.text,
-        id: _controllerId.text,
-      );
-      // await HomeServices().createData(newUser);
-      await Provider.of<ProviderHome>(context, listen: false).createUser(newUser: newUser);
-      showCustomMess(content: 'User create successfully!');
-
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('User create successfully!'),
-      //     ),
-      //   );
-      // }
-    } catch (e) {
-      showCustomMess(content: 'Failed to create user. Please try again.');
-      
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Failed to create user. Please try again.'),
-      //     ),
-      //   );
-      // }
+    UserModel newUser = UserModel(
+      image:
+          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
+      name: _controllerName.text,
+      mail: _controllerGmail.text,
+      address: _controllerAddress.text,
+      dateOfBirth: _controllerAge.text,
+      nationality: _controllerNationality.text,
+      id: _controllerId.text,
+    );
+    // await HomeServices().createData(newUser);
+    bool success = await Provider.of<ProviderHome>(context, listen: false)
+        .createUser(newUser: newUser);
+    //     String message = await Provider.of<ProviderHome>(context, listen: false).messCreate;
+    // String message =
+    //     success ? 'Tạo người dùng thành công' : 'Tạo người dùng thất bại';
+    // showCustomMess(content: message);
+    if(success){
+      showCustomMess(content: context.read<ProviderHome>().messCreate);
+    }
+    else{
+      showCustomMess(content: context.read<ProviderHome>().messCreate);
     }
   }
+
   showCustomMess({required String content}) {
     ShowMessengers.showMessenger(context: context, content: content);
   }
