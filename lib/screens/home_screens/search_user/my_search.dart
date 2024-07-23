@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
@@ -38,7 +37,6 @@ class _MySearchState extends State<MySearch> {
       setState(() {
         userdata = [];
       });
-      // print('Error searching data: $e');
     }
   }
 

@@ -30,7 +30,7 @@ class HomeServices extends HomeRepository {
   Future<UserModel> createData(UserModel newUser) async {
     try {
       final response = await _restClient.post(
-        "/datauser1",
+        "/datauser",
         data: newUser.toMap(),
       );
       if (response is Map<String, dynamic>) {
@@ -93,7 +93,7 @@ class HomeServices extends HomeRepository {
       {required UserModel newUser, required String id}) async {
     try {
       final response = await _restClient.put(
-        "/datauser/$id",
+        "/datauser1/$id",
         data: newUser.toMap(),
       );
 

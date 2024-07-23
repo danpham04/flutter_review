@@ -42,7 +42,8 @@ class _HomeState extends State<Home> {
             if (providerHome.checkGetData) {
               return const ProgressShared();
             } else {
-              if (providerHome.users.isEmpty && providerHome.checkGetData == false) {
+              if (providerHome.users.isEmpty &&
+                  providerHome.checkGetData == false) {
                 return Center(
                   child: Container(
                     width: 200,
@@ -68,7 +69,6 @@ class _HomeState extends State<Home> {
                         children: [
                           SlidableAction(
                             onPressed: (context) {
-                              // TODO
                               Navigator.of(context).pushNamed(
                                   AppRoutes.updateData,
                                   arguments: providerHome.users[index]);
@@ -98,7 +98,6 @@ class _HomeState extends State<Home> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          // TODO
                                           Navigator.of(context).pop();
                                           await providerHome.deleteUser(
                                             id: user.id,

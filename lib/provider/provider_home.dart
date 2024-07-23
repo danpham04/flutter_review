@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,10 +11,10 @@ class ProviderHome extends ChangeNotifier {
 
   List<UserModel> get users => _users;
   bool checkGetData = true;
-  bool checkCreateUser = false;
   String messData = '';
-  String messDelete ='';
+  String messDelete = '';
   String messCreate = '';
+  String messUpdate = '';
 
   Future<void> getData() async {
     try {
@@ -54,11 +52,11 @@ class ProviderHome extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> createUser({required UserModel newUser}) async{
+  Future<bool> createUser({required UserModel newUser}) async {
     try {
       await _homeServices.createData(newUser);
       messCreate = 'Tao nguoi dung thanh cong';
-      _users.add(newUser);
+      // _users.add(newUser);
       notifyListeners();
       return true;
     } catch (e) {
@@ -69,8 +67,18 @@ class ProviderHome extends ChangeNotifier {
     }
   }
 
-  Future<void> updateUser({required String id,required UserModel newUser}) async{
-
+  Future<bool> updateUser(
+      {required String id, required UserModel newUser}) async {
+    try {
+    await _homeServices.updateData(newUser: newUser, id: id);
+    messUpdate = 'Cap nhat nguoi dung thanh cong';
+    notifyListeners();
+    return true;
+    } catch (e) {
+      ApiError error = e as ApiError;
+      messUpdate = error.message.toString();
+      notifyListeners();
+      return false;
+    }
   }
-
 }

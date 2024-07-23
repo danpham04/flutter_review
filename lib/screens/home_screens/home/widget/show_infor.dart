@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
-import 'package:flutter_review/screens/home_screens/home/widget/edit_user/edit_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';

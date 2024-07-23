@@ -1,12 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
-import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
+import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
+import 'package:flutter_review/widgets/show_messenger.dart';
+import 'package:provider/provider.dart';
 
 class EditUser extends StatefulWidget {
   const EditUser({super.key, required this.users});
@@ -61,59 +61,35 @@ class _EditUserState extends State<EditUser> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerImg,
-                  labelText: "Nhập đường dẫn ảnh bạn muốn thay đổi",
-                  hintText: 'Nhập đường dẫn ảnh',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the name you want to add",
+                hintText: 'Nhập đường dẫn ảnh',
+                textController: _controllerImg,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerName,
-                  labelText: "Nhập tên bạn muốn thay đổi",
-                  hintText: 'Nhập tên',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the name you want to add",
+                hintText: 'Nhập tên',
+                textController: _controllerName,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerGmail,
-                  labelText: "Nhập gmail bạn muốn thay đổi",
-                  hintText: 'Nhập gmail',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the gmail you want to add",
+                hintText: 'Nhập gmail',
+                textController: _controllerGmail,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerAddress,
-                  labelText: "Nhập địa chỉ bạn muốn thay đổi",
-                  hintText: 'Nhập địa chỉ',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the address you want to add",
+                hintText: 'Nhập địa chỉ',
+                textController: _controllerAddress,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerAge,
-                  labelText: "Nhập ngày sinh bạn muốn thay đổi",
-                  hintText: 'Nhập ngày sinh',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the date of birth you want to add",
+                hintText: 'Nhập ngày sinh',
+                textController: _controllerAge,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFileUser(
-                  textController: _controllerNationality,
-                  labelText: "Nhập quốc tịch bạn muốn thay đổi",
-                  hintText: 'Nhập quốc tịch',
-                  onChanged: (value) {},
-                ),
+              PadingTextField(
+                labelText: "Enter the nationality you want to add",
+                hintText: 'Nhập quốc tịch',
+                textController: _controllerNationality,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -157,6 +133,7 @@ class _EditUserState extends State<EditUser> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
+                // await Navigator.of(context).pushNamed(AppRoutes.homeScress);
                 await _showSnack();
               },
               child: const Text('Update'),
@@ -168,51 +145,32 @@ class _EditUserState extends State<EditUser> {
   }
 
   Future<void> _showSnack() async {
-    try {
-      UserModel newUser = UserModel(
-        image: _controllerImg.text,
-        name: _controllerName.text,
-        mail: _controllerGmail.text,
-        address: _controllerAddress.text,
-        dateOfBirth: _controllerAge.text,
-        nationality: _controllerNationality.text,
-        id: _user.id,
-      );
+    UserModel newUser = UserModel(
+      image: _controllerImg.text,
+      name: _controllerName.text,
+      mail: _controllerGmail.text,
+      address: _controllerAddress.text,
+      dateOfBirth: _controllerAge.text,
+      nationality: _controllerNationality.text,
+      id: _user.id,
+    );
 
-      await HomeServices().updateData(newUser: newUser, id: _user.id);
-      if (mounted) {
-        setState(() {
-          widget.users.name = _controllerName.text;
-          widget.users.mail = _controllerGmail.text;
-          widget.users.dateOfBirth = _controllerAge.text;
-          widget.users.address = _controllerAddress.text;
-          widget.users.nationality = _controllerNationality.text;
-          widget.users.image = _controllerImg.text;
-        });
-        _showMessenger('User ${_controllerName.text} updated successfully!');
-        Navigator.of(context).pushNamed(AppRoutes.homeScress);
+    bool success = await Provider.of<ProviderHome>(context, listen: false)
+        .updateUser(newUser: newUser, id: _user.id);
+    if (mounted) {
+      if (success) {
+        showCustomMess(
+            content: 'User ${_controllerName.text} updated successfully!');
+        await Navigator.of(context).pushNamed(AppRoutes.homeScress);
+      } else {
+        showCustomMess(
+            content:
+                Provider.of<ProviderHome>(context, listen: false).messUpdate);
       }
-    } catch (e) {
-      ApiError error = e as ApiError;
-      if (mounted) {
-        
-        _showMessenger(error.message.toString());
-      }
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Failed to update user. Please try again.'),
-      //     ),
-      //   );
-      // }
     }
   }
 
-  void _showMessenger(String content) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(content),
-      ),
-    );
+  showCustomMess({required String content}) {
+    ShowMessengers.showMessenger(context: context, content: content);
   }
 }

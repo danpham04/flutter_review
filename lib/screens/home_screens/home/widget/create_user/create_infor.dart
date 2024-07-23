@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
-import 'package:flutter_review/screens/home_screens/home/widget/create_user/pading_text.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:flutter_review/widgets/show_messenger.dart';
@@ -47,27 +47,27 @@ class _CreateInforState extends State<CreateInfor> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              PadingText(
+              PadingTextField(
                 labelText: "Enter the name you want to add",
                 hintText: 'Nhập tên',
                 textController: _controllerName,
               ),
-              PadingText(
+              PadingTextField(
                 labelText: "Enter the gmail you want to add",
                 hintText: 'Nhập gmail',
                 textController: _controllerGmail,
               ),
-              PadingText(
+              PadingTextField(
                 labelText: "Enter the address you want to add",
                 hintText: 'Nhập địa chỉ',
                 textController: _controllerAddress,
               ),
-              PadingText(
+              PadingTextField(
                 labelText: "Enter the date of birth you want to add",
                 hintText: 'Nhập ngày sinh',
                 textController: _controllerAge,
               ),
-              PadingText(
+              PadingTextField(
                 labelText: "Enter the nationality you want to add",
                 hintText: 'Nhập quốc tịch',
                 textController: _controllerNationality,
@@ -106,18 +106,16 @@ class _CreateInforState extends State<CreateInfor> {
       nationality: _controllerNationality.text,
       id: _controllerId.text,
     );
-    // await HomeServices().createData(newUser);
+
     bool success = await Provider.of<ProviderHome>(context, listen: false)
         .createUser(newUser: newUser);
-    //     String message = await Provider.of<ProviderHome>(context, listen: false).messCreate;
-    // String message =
-    //     success ? 'Tạo người dùng thành công' : 'Tạo người dùng thất bại';
-    // showCustomMess(content: message);
-    if(success){
-      showCustomMess(content: context.read<ProviderHome>().messCreate);
-    }
-    else{
-      showCustomMess(content: context.read<ProviderHome>().messCreate);
+
+    if (mounted) {
+      if (success) {
+        showCustomMess(content: context.read<ProviderHome>().messCreate);
+      } else {
+        showCustomMess(content: context.read<ProviderHome>().messCreate);
+      }
     }
   }
 

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_review/screens/home_screens/home/widget/text_file_user.dart';
 
-class PadingText extends StatelessWidget {
-  const PadingText(
+class PadingTextField extends StatelessWidget {
+  const PadingTextField(
       {super.key,
       required this.labelText,
       required this.hintText,
@@ -16,13 +15,13 @@ class PadingText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextFileUser(
-        textController: textController,
-        labelText: labelText,
-        hintText: hintText,
-        onChanged: (value) {
-          onChanged;
-        },
+      child: TextField(
+        controller: textController,
+        decoration: InputDecoration(
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            labelText: labelText,
+            hintText: hintText),
       ),
     );
   }
