@@ -93,7 +93,7 @@ class HomeServices extends HomeRepository {
       {required UserModel newUser, required String id}) async {
     try {
       final response = await _restClient.put(
-        "/datauser1/$id",
+        "/datauser/$id",
         data: newUser.toMap(),
       );
 
