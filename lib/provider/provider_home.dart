@@ -5,24 +5,29 @@ import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
 
-
 class ProviderHome extends ChangeNotifier {
   List<UserModel> _users = [];
   final HomeServices _homeServices = HomeServices();
-
   List<UserModel> get users => _users;
   bool checkGetData = true;
+  bool checkSearchUser = true;
   String messData = '';
   String messDelete = '';
   String messCreate = '';
   String messUpdate = '';
+  String messSearch = '';
+
+  List<UserModel> _searchUser = [];
+  List<UserModel> get searchUserData => _searchUser;
+  String key = 'id';
+  List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
 
   Future<void> getData() async {
     try {
       final List<UserModel> temp = await _homeServices.getData();
       _users = temp;
       checkGetData = false;
-      messData = '';
+
       notifyListeners();
     } catch (e) {
       ApiError error = e as ApiError;
@@ -81,6 +86,35 @@ class ProviderHome extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> searchUser({required String value}) async {
+
+    try {
+      final List<UserModel> temp = await _homeServices.searchData(key, value);
+      if (value != '') {
+        _searchUser = temp;
+        checkSearchUser = true;
+        notifyListeners();
+      }
+      
+    } catch (e) {
+      ApiError error = e as ApiError;
+      messSearch = error.message.toString();
+      _searchUser = [];
+      checkSearchUser = false;
+      notifyListeners();
+    }
+  }
+
+  void setKey(String newKey) {
+    key = newKey;
+    notifyListeners();
+  }
+
+  void clearSearchResults() {
+    _searchUser = [];
+    notifyListeners();
   }
 
 }

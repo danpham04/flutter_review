@@ -33,12 +33,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-          padding: const EdgeInsets.all(8),
-          child:
-              // dùng Consumer<ProviderHome>(builder: (context, providerHome, child)
-              // khi mà một phần cụ thể của UI được rebuild mỗi khi giá trị trong provider thay đổi.
+        padding: const EdgeInsets.all(8),
+        child:
+            // dùng Consumer<ProviderHome>(builder: (context, providerHome, child)
+            // khi mà một phần cụ thể của UI được rebuild mỗi khi giá trị trong provider thay đổi.
 
-              Consumer<ProviderHome>(builder: (context, providerHome, child) {
+            Consumer<ProviderHome>(
+          builder: (context, providerHome, child) {
             if (providerHome.checkGetData) {
               return const ProgressShared();
             } else {
@@ -125,7 +126,9 @@ class _HomeState extends State<Home> {
                 );
               }
             }
-          })),
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.createData);

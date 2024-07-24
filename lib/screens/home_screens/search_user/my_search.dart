@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
-import 'package:flutter_review/model/user_model.dart';
+import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
+import 'package:provider/provider.dart';
 
 class MySearch extends StatefulWidget {
   const MySearch({
@@ -15,29 +15,12 @@ class MySearch extends StatefulWidget {
 }
 
 class _MySearchState extends State<MySearch> {
-  List<UserModel> userdata = [];
-  String key = 'id';
-  List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
-  final HomeServices _homeServices = HomeServices();
   late TextEditingController _controllerSearch;
   late String text;
   @override
   void initState() {
     _controllerSearch = TextEditingController();
     super.initState();
-  }
-
-  Future<void> searchUser(String value) async {
-    try {
-      final List<UserModel> temp = await _homeServices.searchData(key, value);
-      setState(() {
-        userdata = temp;
-      });
-    } catch (e) {
-      setState(() {
-        userdata = [];
-      });
-    }
   }
 
   @override
@@ -48,6 +31,7 @@ class _MySearchState extends State<MySearch> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProviderHome>(context);
     return Scaffold(
       appBar: AppBarShared(
         titleName: 'Search User',
@@ -61,19 +45,15 @@ class _MySearchState extends State<MySearch> {
         ],
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
               onChanged: (value) {
                 if (value.isEmpty) {
-                  setState(() {
-                    userdata = [];
-                  });
+                  provider.clearSearchResults();
                 } else {
-                  setState(() {
-                    searchUser(value);
-                  });
+                  provider.searchUser(value: value);
                 }
               },
               controller: _controllerSearch,
@@ -82,9 +62,7 @@ class _MySearchState extends State<MySearch> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       _controllerSearch.clear();
-                      setState(() {
-                        userdata = [];
-                      });
+                      provider.clearSearchResults();
                     },
                     icon: IconButton(
                       onPressed: () {
@@ -104,22 +82,65 @@ class _MySearchState extends State<MySearch> {
             ),
           ),
           Expanded(
-            child: userdata.isEmpty
-                ? const Center(child: Text('No value.....!'))
-                : ListView.builder(
-                    itemCount: userdata.length,
-                    itemBuilder: (context, index) {
-                      final user = userdata[index];
-                      return InforUser(users: user);
-                    },
-                  ),
-          ),
+            // child: provider.searchUserData.isEmpty
+            //     ? const Center(child: Text('No value.....!'))
+            //     : ListView.builder(
+            //         itemCount: provider.searchUserData.length,
+            //         itemBuilder: (context, index) {
+            //           final user = provider.searchUserData[index];
+            //           return InforUser(users: user);
+            //         },
+            //       ),
+            child: Consumer<ProviderHome>(
+              builder: (context, provider, child) {
+                // if (!provider.checkSearchUser &&
+                //     provider.searchUserData.isEmpty) {
+                //   return Center(
+                //     child: Text(provider.messSearch),
+                //   );
+                // } else {
+                //   if (provider.searchUserData.isEmpty &&
+                //       provider.messSearch.isEmpty) {
+                //     return const Center(
+                //       child: Text('Please enter a search term.'),
+                //     );
+                //   } else if (provider.searchUserData.isEmpty &&
+                //       provider.checkSearchUser == true) {
+                //     return const Center(
+                //       child: Text('No value.....!'),
+                //     );
+                //   }
+                // }
+
+                if (provider.searchUserData.isEmpty &&
+                    _controllerSearch.text == '') {
+                  return const Center(
+                    child: Text('Please enter a search term.'),
+                  );
+                } else if (provider.searchUserData.isEmpty &&
+                    provider.checkSearchUser == false) {
+                  return const Center(
+                    child: Text('No value.....!'),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: provider.searchUserData.length,
+                  itemBuilder: (context, index) {
+                    final user = provider.searchUserData[index];
+                    return InforUser(users: user);
+                  },
+                );
+              },
+            ),
+          )
         ],
       ),
     );
   }
 
   void _filterDataUser(BuildContext context) {
+    final providerHome = Provider.of<ProviderHome>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -132,17 +153,15 @@ class _MySearchState extends State<MySearch> {
               width: 250,
               height: 280,
               child: ListView.builder(
-                itemCount: listTilte.length,
+                itemCount: providerHome.listTilte.length,
                 itemBuilder: (BuildContext context, int index) {
                   return RadioListTile(
-                      value: listTilte[index].toLowerCase(),
-                      title: Text(listTilte[index]),
-                      groupValue: key,
+                      value: providerHome.listTilte[index].toLowerCase(),
+                      title: Text(providerHome.listTilte[index]),
+                      groupValue: providerHome.key,
                       onChanged: (value) {
-                        setState(() {
-                          key = value!;
-                        });
-                        searchUser(_controllerSearch.text);
+                        providerHome.setKey(value as String);
+                        providerHome.searchUser(value: _controllerSearch.text);
                         Navigator.pop(context);
                       });
                 },
