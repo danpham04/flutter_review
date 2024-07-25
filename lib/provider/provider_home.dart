@@ -11,6 +11,7 @@ class ProviderHome extends ChangeNotifier {
   List<UserModel> get users => _users;
   bool checkGetData = true;
   bool checkSearchUser = true;
+  bool checkValue = true;
   String messData = '';
   String messDelete = '';
   String messCreate = '';
@@ -95,6 +96,7 @@ class ProviderHome extends ChangeNotifier {
       if (value != '') {
         _searchUser = temp;
         checkSearchUser = true;
+        checkValue = false;
         notifyListeners();
       }
       
@@ -112,7 +114,7 @@ class ProviderHome extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearSearchResults() {
+  void clearSearchUser() {
     _searchUser = [];
     notifyListeners();
   }

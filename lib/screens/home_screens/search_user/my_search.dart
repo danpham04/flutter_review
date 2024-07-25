@@ -51,7 +51,7 @@ class _MySearchState extends State<MySearch> {
             child: TextField(
               onChanged: (value) {
                 if (value.isEmpty) {
-                  provider.clearSearchResults();
+                  provider.clearSearchUser();
                 } else {
                   provider.searchUser(value: value);
                 }
@@ -62,7 +62,7 @@ class _MySearchState extends State<MySearch> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       _controllerSearch.clear();
-                      provider.clearSearchResults();
+                      provider.clearSearchUser();
                     },
                     icon: IconButton(
                       onPressed: () {
@@ -82,57 +82,32 @@ class _MySearchState extends State<MySearch> {
             ),
           ),
           Expanded(
-            // child: provider.searchUserData.isEmpty
-            //     ? const Center(child: Text('No value.....!'))
-            //     : ListView.builder(
-            //         itemCount: provider.searchUserData.length,
-            //         itemBuilder: (context, index) {
-            //           final user = provider.searchUserData[index];
-            //           return InforUser(users: user);
-            //         },
-            //       ),
-            child: Consumer<ProviderHome>(
-              builder: (context, provider, child) {
-                // if (!provider.checkSearchUser &&
-                //     provider.searchUserData.isEmpty) {
-                //   return Center(
-                //     child: Text(provider.messSearch),
-                //   );
-                // } else {
-                //   if (provider.searchUserData.isEmpty &&
-                //       provider.messSearch.isEmpty) {
-                //     return const Center(
-                //       child: Text('Please enter a search term.'),
-                //     );
-                //   } else if (provider.searchUserData.isEmpty &&
-                //       provider.checkSearchUser == true) {
-                //     return const Center(
-                //       child: Text('No value.....!'),
-                //     );
-                //   }
-                // }
-
-                if (provider.searchUserData.isEmpty &&
-                    _controllerSearch.text == '') {
-                  return const Center(
-                    child: Text('Please enter a search term.'),
+            child: Consumer<ProviderHome>(builder: (context, provider, child) {
+              if (provider.searchUserData.isEmpty) {
+                if (_controllerSearch.text == '') {
+                  return Center(
+                    child: Text(
+                        'Please enter a search term with type ${provider.key}.'),
                   );
-                } else if (provider.searchUserData.isEmpty &&
+                } else if (provider.checkValue == false &&
                     provider.checkSearchUser == false) {
                   return const Center(
-                    child: Text('No value.....!'),
+                    child: Text('No value!'),
+                  );
+                } else {
+                  return Center(
+                    child: Text(provider.messSearch),
                   );
                 }
-
-                return ListView.builder(
-                  itemCount: provider.searchUserData.length,
-                  itemBuilder: (context, index) {
-                    final user = provider.searchUserData[index];
-                    return InforUser(users: user);
-                  },
-                );
-              },
-            ),
+              }
+              return ListView.builder(
+                itemCount: provider.searchUserData.length,
+                itemBuilder: (context, index) {
+                  final users = provider.searchUserData[index];
+                  return InforUser(users: users);
+                },
+              );
+            }),
           )
         ],
       ),
