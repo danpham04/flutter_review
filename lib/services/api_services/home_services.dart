@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/api/rest_client.dart';
 import 'package:flutter_review/model/user_model.dart';

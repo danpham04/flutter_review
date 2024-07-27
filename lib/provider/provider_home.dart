@@ -48,15 +48,14 @@ class ProviderHome extends ChangeNotifier {
         _users.removeAt(index);
         messDelete = 'Xóa thành công';
         notifyListeners();
-        return true;
       }
+      return true;
     } catch (e) {
       ApiError error = e as ApiError;
       messDelete = error.message.toString();
       notifyListeners();
       return false;
     }
-    return false;
   }
 
   Future<bool> createUser({required UserModel newUser}) async {
@@ -90,7 +89,6 @@ class ProviderHome extends ChangeNotifier {
   }
 
   Future<void> searchUser({required String value}) async {
-
     try {
       final List<UserModel> temp = await _homeServices.searchData(key, value);
       if (value != '') {
@@ -99,7 +97,6 @@ class ProviderHome extends ChangeNotifier {
         checkValue = false;
         notifyListeners();
       }
-      
     } catch (e) {
       ApiError error = e as ApiError;
       messSearch = error.message.toString();
@@ -118,5 +115,4 @@ class ProviderHome extends ChangeNotifier {
     _searchUser = [];
     notifyListeners();
   }
-
 }
