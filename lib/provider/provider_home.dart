@@ -10,6 +10,8 @@ class ProviderHome extends ChangeNotifier {
   bool isLoading = true;
   String messageGetData = '';
   String messageDeleteData = '';
+  String messageCreateData = '';
+  String messageUpdateData = '';
 
   Future<bool> getData() async {
     try {
@@ -30,11 +32,11 @@ class ProviderHome extends ChangeNotifier {
   Future<bool> deleteData({
     required String id,
     required int index,
-  }) async{
+  }) async {
     try {
       bool checkDeleteUser = await _homeServices.deleteData(id);
-      if(checkDeleteUser){
-        messageDeleteData = 'Xóa thành công';
+      if (checkDeleteUser) {
+        messageDeleteData = 'Xóa tài khoản thành công';
         _loadUser.removeAt(index);
         notifyListeners();
       }
@@ -42,6 +44,36 @@ class ProviderHome extends ChangeNotifier {
     } catch (e) {
       ApiError error = e as ApiError;
       messageDeleteData = error.message.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> createData({required UserModel newUser}) async {
+    try {
+      await _homeServices.createData(newUser);
+      messageCreateData = 'Tạo tài khoản thành ${newUser.name} công';
+      notifyListeners();
+      return true;
+    } catch (e) {
+      ApiError error = e as ApiError;
+      messageCreateData = error.message.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateData(
+      {required String id, required UserModel newUser}) async {
+    try {
+      await _homeServices.updateData(newUser: newUser, id: id);
+      messageUpdateData = 'Cập nhật tài khoản ${newUser.name} thành công';
+      notifyListeners();
+      return true;
+    } catch (e) {
+      ApiError error = e as ApiError;
+      messageUpdateData = error.message.toString();
+      // messageUpdateData = "xin chao";
       notifyListeners();
       return false;
     }

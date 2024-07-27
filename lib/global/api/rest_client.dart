@@ -175,17 +175,17 @@ class RestClient {
         case DioExceptionType.receiveTimeout:
           return ApiError(
               errorCode: "RECEIVE_TIMEOUT",
-              message: 'Có lỗi kết nối đến server');
+              message: 'Có lỗi kết nối đến server ');
         case DioExceptionType.badResponse:
           if (e.response?.data != null && e.response?.data is Map) {
             String code = '';
             try {
               dynamic errorData = e.response!.data;
               code = errorData["code"];
-              if (code == '404') {
+              if (code == '400') {
                 return ApiError(
                   errorCode: code,
-                  message: 'Có lỗi kết nối 404 đến server',
+                  message: 'Có lỗi kết nối 400 đến server',
                   extraData: e.response?.data,
                 );
               }
