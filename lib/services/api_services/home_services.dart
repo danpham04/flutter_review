@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_review/global/api/api_error.dart';
 import 'package:flutter_review/global/api/rest_client.dart';
 import 'package:flutter_review/model/user_model.dart';
@@ -32,6 +35,12 @@ class HomeServices extends HomeRepository {
       final response = await _restClient.post(
         "/datauser",
         data: newUser.toMap(),
+        // options: Options(
+        //   // contentType: Headers.jsonContentType
+        //   // headers: {
+        //   //   'Content-Type': 'application/json; charset=UTF-8',
+        //   // },
+        // ),
       );
       if (response is Map<String, dynamic>) {
         return UserModel.fromMap(response);

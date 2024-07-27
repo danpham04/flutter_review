@@ -133,7 +133,6 @@ class _EditUserState extends State<EditUser> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                // await Navigator.of(context).pushNamed(AppRoutes.homeScress);
                 await _showSnack();
               },
               child: const Text('Update'),
@@ -145,6 +144,7 @@ class _EditUserState extends State<EditUser> {
   }
 
   Future<void> _showSnack() async {
+    final providerHome = Provider.of<ProviderHome>(context, listen: false);
     UserModel newUser = UserModel(
       image: _controllerImg.text,
       name: _controllerName.text,
@@ -155,17 +155,16 @@ class _EditUserState extends State<EditUser> {
       id: _user.id,
     );
 
-    bool success = await Provider.of<ProviderHome>(context, listen: false)
-        .updateUser(newUser: newUser, id: _user.id);
+    bool success =
+        await providerHome.updateUser(newUser: newUser, id: _user.id);
+
     if (mounted) {
       if (success) {
         showCustomMess(
             content: 'User ${_controllerName.text} updated successfully!');
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
       } else {
-        showCustomMess(
-            content:
-                Provider.of<ProviderHome>(context, listen: false).messUpdate);
+        showCustomMess(content: providerHome.messUpdate);
       }
     }
   }
