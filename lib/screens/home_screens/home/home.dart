@@ -155,7 +155,7 @@ class _HomeState extends State<Home> {
   Future<void> _deleteDataUser({
     required String id,
     required UserModel user,
-    required index,
+    required int index,
   }) async {
     try {
       bool checkDeleteUser = await _homeServices.deleteData(id);
