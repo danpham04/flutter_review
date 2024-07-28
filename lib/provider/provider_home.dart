@@ -12,12 +12,14 @@ class ProviderHome extends ChangeNotifier {
   String messageDeleteData = '';
   String messageCreateData = '';
   String messageUpdateData = '';
+  bool check = true;
 
   Future<bool> getData() async {
     try {
       final List<UserModel> temp = await _homeServices.getData();
       _loadUser = temp;
       isLoading = false;
+      check = false;
       notifyListeners();
       return true;
     } catch (e) {
@@ -77,5 +79,37 @@ class ProviderHome extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  List<UserModel> _userdata = [];
+  String key = 'id';
+  List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
+  List<UserModel> get userData => _userdata;
+  String messageSearchData = '';
+
+  Future<void> searchData({ required String value}) async{
+    try {
+      final List<UserModel> temp = await _homeServices.searchData(key, value);
+      if(value != ''){
+        _userdata = temp;
+        notifyListeners();
+      }
+    } catch (e) {
+      ApiError error = e as ApiError;
+      messageSearchData = error.message.toString();
+      _userdata = [];
+     
+      notifyListeners();
+    }
+  }
+
+  void setkey(String newkey){
+    key = newkey;
+    notifyListeners();
+  }
+
+  void clearSearch(){
+    _userdata = [];
+    notifyListeners();
   }
 }

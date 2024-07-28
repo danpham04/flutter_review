@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
-import 'package:flutter_review/model/user_model.dart';
+import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
+import 'package:provider/provider.dart';
 
 class MySearch extends StatefulWidget {
   const MySearch({
@@ -15,30 +15,13 @@ class MySearch extends StatefulWidget {
 }
 
 class _MySearchState extends State<MySearch> {
-  List<UserModel> userdata = [];
-  String key = 'id';
-  List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
-  final HomeServices _homeServices = HomeServices();
   late TextEditingController _controllerSearch;
   late String text;
+
   @override
   void initState() {
     _controllerSearch = TextEditingController();
     super.initState();
-  }
-
-  Future<void> searchUser(String value) async {
-    try {
-      final List<UserModel> temp = await _homeServices.searchData(key, value);
-      setState(() {
-        userdata = temp;
-      });
-    } catch (e) {
-      setState(() {
-        userdata = [];
-      });
-      // print('Error searching data: $e');
-    }
   }
 
   @override
@@ -49,6 +32,7 @@ class _MySearchState extends State<MySearch> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProviderHome>(context);
     return Scaffold(
       appBar: AppBarShared(
         titleName: 'Search User',
@@ -68,13 +52,9 @@ class _MySearchState extends State<MySearch> {
             child: TextField(
               onChanged: (value) {
                 if (value.isEmpty) {
-                  setState(() {
-                    userdata = [];
-                  });
+                  provider.clearSearch();
                 } else {
-                  setState(() {
-                    searchUser(value);
-                  });
+                  provider.searchData(value: value);
                 }
               },
               controller: _controllerSearch,
@@ -83,9 +63,7 @@ class _MySearchState extends State<MySearch> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       _controllerSearch.clear();
-                      setState(() {
-                        userdata = [];
-                      });
+                      provider.clearSearch();
                     },
                     icon: IconButton(
                       onPressed: () {
@@ -105,12 +83,12 @@ class _MySearchState extends State<MySearch> {
             ),
           ),
           Expanded(
-            child: userdata.isEmpty
+            child: provider.userData.isEmpty
                 ? const Center(child: Text('No value.....!'))
                 : ListView.builder(
-                    itemCount: userdata.length,
+                    itemCount: provider.userData.length,
                     itemBuilder: (context, index) {
-                      final user = userdata[index];
+                      final user = provider.userData[index];
                       return InforUser(users: user);
                     },
                   ),
@@ -121,6 +99,7 @@ class _MySearchState extends State<MySearch> {
   }
 
   void _filterDataUser(BuildContext context) {
+    final provider = Provider.of<ProviderHome>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -133,17 +112,15 @@ class _MySearchState extends State<MySearch> {
               width: 250,
               height: 280,
               child: ListView.builder(
-                itemCount: listTilte.length,
+                itemCount: provider.listTilte.length,
                 itemBuilder: (BuildContext context, int index) {
                   return RadioListTile(
-                      value: listTilte[index].toLowerCase(),
-                      title: Text(listTilte[index]),
-                      groupValue: key,
+                      value: provider.listTilte[index].toLowerCase(),
+                      title: Text(provider.listTilte[index]),
+                      groupValue: provider.key,
                       onChanged: (value) {
-                        setState(() {
-                          key = value!;
-                        });
-                        searchUser(_controllerSearch.text);
+                        provider.setkey(value as String);
+                        provider.searchData(value: _controllerSearch.text);
                         Navigator.pop(context);
                       });
                 },
