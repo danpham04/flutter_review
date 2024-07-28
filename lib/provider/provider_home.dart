@@ -8,15 +8,16 @@ import 'package:flutter_review/services/api_services/home_services.dart';
 class ProviderHome extends ChangeNotifier {
   List<UserModel> _users = [];
   final HomeServices _homeServices = HomeServices();
-  List<UserModel> get users => _users;
-  bool checkGetData = true;
+  List<UserModel> get loadUser => _users;
+  bool isLoading = true;
+  bool checkData = true;
   bool checkSearchUser = true;
   bool checkValue = true;
-  String messData = '';
-  String messDelete = '';
-  String messCreate = '';
-  String messUpdate = '';
-  String messSearch = '';
+  String messageGetData = '';
+  String messageDelete = '';
+  String messageCreate = '';
+  String messageUpdate = '';
+  String messageSearch = '';
 
   List<UserModel> _searchUser = [];
   List<UserModel> get searchUserData => _searchUser;
@@ -27,13 +28,13 @@ class ProviderHome extends ChangeNotifier {
     try {
       final List<UserModel> temp = await _homeServices.getData();
       _users = temp;
-      checkGetData = false;
-
+      isLoading = false;
+      checkData = false;
       notifyListeners();
     } catch (e) {
       ApiError error = e as ApiError;
-      messData = error.message.toString();
-      checkGetData = false;
+      messageGetData = error.message.toString();
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -46,13 +47,13 @@ class ProviderHome extends ChangeNotifier {
       bool isDeleted = await _homeServices.deleteData(id);
       if (isDeleted) {
         _users.removeAt(index);
-        messDelete = 'Xóa thành công';
+        messageDelete = 'Xóa thành công';
         notifyListeners();
       }
       return true;
     } catch (e) {
       ApiError error = e as ApiError;
-      messDelete = error.message.toString();
+      messageDelete = error.message.toString();
       notifyListeners();
       return false;
     }
@@ -61,13 +62,12 @@ class ProviderHome extends ChangeNotifier {
   Future<bool> createUser({required UserModel newUser}) async {
     try {
       await _homeServices.createData(newUser);
-      messCreate = 'Tao nguoi dung thanh cong';
-      // _users.add(newUser);
+      messageCreate = 'Tao nguoi dung thanh cong';
       notifyListeners();
       return true;
     } catch (e) {
       ApiError error = e as ApiError;
-      messCreate = error.message.toString();
+      messageCreate = error.message.toString();
       notifyListeners();
       return false;
     }
@@ -77,12 +77,12 @@ class ProviderHome extends ChangeNotifier {
       {required String id, required UserModel newUser}) async {
     try {
       await _homeServices.updateData(newUser: newUser, id: id);
-      messUpdate = 'Cap nhat nguoi dung thanh cong';
+      messageUpdate = 'Cap nhat nguoi dung thanh cong';
       notifyListeners();
       return true;
     } catch (e) {
       ApiError error = e as ApiError;
-      messUpdate = error.message.toString();
+      messageUpdate = error.message.toString();
       notifyListeners();
       return false;
     }
@@ -99,7 +99,7 @@ class ProviderHome extends ChangeNotifier {
       }
     } catch (e) {
       ApiError error = e as ApiError;
-      messSearch = error.message.toString();
+      messageSearch = error.message.toString();
       _searchUser = [];
       checkSearchUser = false;
       notifyListeners();

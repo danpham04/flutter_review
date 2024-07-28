@@ -45,7 +45,7 @@ class _MySearchState extends State<MySearch> {
         ],
       ),
       body: Column(
-        children: <Widget>[
+        children:[
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
@@ -96,7 +96,7 @@ class _MySearchState extends State<MySearch> {
                   );
                 } else {
                   return Center(
-                    child: Text(provider.messSearch),
+                    child: Text(provider.messageSearch),
                   );
                 }
               }

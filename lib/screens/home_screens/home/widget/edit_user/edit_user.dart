@@ -164,7 +164,7 @@ class _EditUserState extends State<EditUser> {
             content: 'User ${_controllerName.text} updated successfully!');
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
       } else {
-        showCustomMess(content: providerHome.messUpdate);
+        showCustomMess(content: providerHome.messageUpdate);
       }
     }
   }

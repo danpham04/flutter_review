@@ -112,9 +112,9 @@ class _CreateInforState extends State<CreateInfor> {
 
     if (mounted) {
       if (success) {
-        showCustomMess(content: context.read<ProviderHome>().messCreate);
+        showCustomMess(content: context.read<ProviderHome>().messageCreate);
       } else {
-        showCustomMess(content: context.read<ProviderHome>().messCreate);
+        showCustomMess(content: context.read<ProviderHome>().messageCreate);
       }
     }
   }
