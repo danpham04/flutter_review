@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/button_dig_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:flutter_review/widgets/show_messenger.dart';
@@ -78,9 +80,9 @@ class _CreateInforState extends State<CreateInfor> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(AppRoutes.homeScress);
-                    await _showSnack();
+                  onPressed: () {
+                    // await _updateDataUser();
+                    _showDialog();
                   },
                   child: const TextInfor(
                     text: 'Add User',
@@ -95,7 +97,33 @@ class _CreateInforState extends State<CreateInfor> {
     );
   }
 
-  Future<void> _showSnack() async {
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowDiaLog(
+          content: 'Are you sure you want to create the user?',
+          title: 'Create user',
+          actions: [
+            ButtonDigLog(
+              text: 'Cancel',
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ButtonDigLog(
+              text: 'Create',
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _updateDataUser();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateDataUser() async {
+    final providerHome = Provider.of<ProviderHome>(context, listen: false);
     UserModel newUser = UserModel(
       image:
           "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
@@ -107,14 +135,14 @@ class _CreateInforState extends State<CreateInfor> {
       id: _controllerId.text,
     );
 
-    bool success = await Provider.of<ProviderHome>(context, listen: false)
-        .createUser(newUser: newUser);
+    bool success = await providerHome.createUser(newUser: newUser);
 
     if (mounted) {
       if (success) {
-        showCustomMess(content: context.read<ProviderHome>().messageCreate);
+        showCustomMess(content: providerHome.messageCreate);
+        await Navigator.of(context).pushNamed(AppRoutes.homeScress);
       } else {
-        showCustomMess(content: context.read<ProviderHome>().messageCreate);
+        showCustomMess(content: providerHome.messageCreate);
       }
     }
   }

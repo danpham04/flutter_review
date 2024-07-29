@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/button_dig_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/infor_user.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
@@ -47,17 +48,27 @@ class _HomeState extends State<Home> {
                     value.isLoading == false &&
                     value.checkData == true) {
                   return ShowDiaLog(
-                    conten: value.messageGetData,
+                    content: value.messageGetData,
                     title: 'Lỗi',
-                    text: "OK",
+                    actions: [
+                      ButtonDigLog(
+                        text: 'OK',
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
                     color: Colors.blue[100],
                   );
                 } else {
                   if (value.loadUser.isEmpty) {
                     return ShowDiaLog(
-                      conten: 'Không có dữ liệu ',
+                      content: 'Không có dữ liệu ',
                       title: 'Thông báo',
-                      text: "OK",
+                      actions: [
+                        ButtonDigLog(
+                          text: 'OK',
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      ],
                       color: Colors.blue[100],
                     );
                   } else {
@@ -86,21 +97,17 @@ class _HomeState extends State<Home> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const TextInfor(
-                                          text: 'Delete User',
-                                        ),
-                                        content: const TextInfor(
-                                            text:
-                                                'Are you sure you want to delete ?'),
+                                      return ShowDiaLog(
+                                        title: 'Delete User',
+                                        content:
+                                            'Are you sure you want to delete ?',
                                         actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Cancel'),
+                                          ButtonDigLog(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            text: 'Cancel',
                                           ),
-                                          TextButton(
+                                          ButtonDigLog(
                                             onPressed: () async {
                                               // TODO
                                               Navigator.of(context).pop();
@@ -109,7 +116,7 @@ class _HomeState extends State<Home> {
                                               showCustomMess(
                                                   content: value.messageDelete);
                                             },
-                                            child: const Text('Delete'),
+                                            text: 'Delete',
                                           ),
                                         ],
                                       );

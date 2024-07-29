@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/button_dig_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/text_infor.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:flutter_review/widgets/show_messenger.dart';
@@ -117,33 +119,31 @@ class _EditUserState extends State<EditUser> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const TextInfor(
-            text: 'User Update',
-          ),
-          content: const TextInfor(
-              text: 'Are you sure you want to update the user ?'),
+        return ShowDiaLog(
+          color: Colors.blue[100],
+          content: 'Are you sure you want to update the user ?',
+          title: 'User Update',
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+            ButtonDigLog(
+              text: 'Cancel',
+              color: Colors.black,
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            TextButton(
+            ButtonDigLog(
+              color: Colors.black,
+              text: 'Create',
               onPressed: () async {
                 Navigator.of(context).pop();
-                await _showSnack();
+                await _editUserData();
               },
-              child: const Text('Update'),
-            ),
+            )
           ],
         );
       },
     );
   }
 
-  Future<void> _showSnack() async {
+  Future<void> _editUserData() async {
     final providerHome = Provider.of<ProviderHome>(context, listen: false);
     UserModel newUser = UserModel(
       image: _controllerImg.text,

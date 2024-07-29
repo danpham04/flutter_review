@@ -45,7 +45,7 @@ class _MySearchState extends State<MySearch> {
         ],
       ),
       body: Column(
-        children:[
+        children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
@@ -58,56 +58,62 @@ class _MySearchState extends State<MySearch> {
               },
               controller: _controllerSearch,
               decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _controllerSearch.clear();
+                    provider.clearSearchUser();
+                  },
+                  icon: IconButton(
                     onPressed: () {
-                      _controllerSearch.clear();
-                      provider.clearSearchUser();
+                      text = _controllerSearch.text;
+                      if (text.isEmpty) {
+                        Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                      } else {
+                        _controllerSearch.text = '';
+                      }
                     },
-                    icon: IconButton(
-                      onPressed: () {
-                        text = _controllerSearch.text;
-                        if (text.isEmpty) {
-                          Navigator.of(context).pushNamed(AppRoutes.homeScress);
-                        } else {
-                          _controllerSearch.text = '';
-                        }
-                      },
-                      icon: const Icon(Icons.clear),
-                    ),
+                    icon: const Icon(Icons.clear),
                   ),
-                  hintText: 'Search.....',
-                  border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)))),
+                ),
+                hintText: 'Search.....',
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(
-            child: Consumer<ProviderHome>(builder: (context, provider, child) {
-              if (provider.searchUserData.isEmpty) {
-                if (_controllerSearch.text == '') {
-                  return Center(
-                    child: Text(
-                        'Please enter a search term with type ${provider.key}.'),
-                  );
-                } else if (provider.checkValue == false &&
-                    provider.checkSearchUser == false) {
-                  return const Center(
-                    child: Text('No value!'),
-                  );
-                } else {
-                  return Center(
-                    child: Text(provider.messageSearch),
-                  );
+            child: Consumer<ProviderHome>(
+              builder: (context, provider, child) {
+                if (provider.searchUserData.isEmpty) {
+                  if (_controllerSearch.text == '') {
+                    return Center(
+                      child: Text(
+                          'Please enter a search term with type ${provider.key}.'),
+                    );
+                  } else if (provider.checkValue == false &&
+                      provider.checkSearchUser == false) {
+                    return const Center(
+                      child: Text('No value!'),
+                    );
+                  } else {
+                    return Center(
+                      child: Text(provider.messageSearch),
+                    );
+                  }
                 }
-              }
-              return ListView.builder(
-                itemCount: provider.searchUserData.length,
-                itemBuilder: (context, index) {
-                  final users = provider.searchUserData[index];
-                  return InforUser(users: users);
-                },
-              );
-            }),
+                return ListView.builder(
+                  itemCount: provider.searchUserData.length,
+                  itemBuilder: (context, index) {
+                    final users = provider.searchUserData[index];
+                    return InforUser(users: users);
+                  },
+                );
+              },
+            ),
           )
         ],
       ),
@@ -120,44 +126,48 @@ class _MySearchState extends State<MySearch> {
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setSearch) {
-          return AlertDialog(
-            title: const Text('You want to search'),
-            content: SingleChildScrollView(
+          builder: (BuildContext context, StateSetter setSearch) {
+            return AlertDialog(
+              title: const Text('You want to search'),
+              content: SingleChildScrollView(
                 child: SizedBox(
-              width: 250,
-              height: 280,
-              child: ListView.builder(
-                itemCount: providerHome.listTilte.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return RadioListTile(
-                      value: providerHome.listTilte[index].toLowerCase(),
-                      title: Text(providerHome.listTilte[index]),
-                      groupValue: providerHome.key,
-                      onChanged: (value) {
-                        providerHome.setKey(value as String);
-                        providerHome.searchUser(value: _controllerSearch.text);
-                        Navigator.pop(context);
-                      });
-                },
-              ),
-            )),
-            actions: [
-              TextButton(
-                style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color.fromARGB(255, 120, 178, 226))),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(color: Colors.black),
+                  width: 250,
+                  height: 280,
+                  child: ListView.builder(
+                    itemCount: providerHome.listTilte.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return RadioListTile(
+                        value: providerHome.listTilte[index].toLowerCase(),
+                        title: Text(providerHome.listTilte[index]),
+                        groupValue: providerHome.key,
+                        onChanged: (value) {
+                          providerHome.setKey(value as String);
+                          providerHome.searchUser(
+                              value: _controllerSearch.text);
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
-            ],
-          );
-        });
+              actions: [
+                TextButton(
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          const Color.fromARGB(255, 120, 178, 226))),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }
