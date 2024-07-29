@@ -94,7 +94,7 @@ class _MySearchState extends State<MySearch> {
                       child: Text(
                           'Please enter a search term with type ${provider.key}.'),
                     );
-                  } else if (provider.checkValue == false &&
+                  } else if (provider.checkValue == true &&
                       provider.checkSearchUser == false) {
                     return const Center(
                       child: Text('No value!'),

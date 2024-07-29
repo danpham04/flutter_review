@@ -12,7 +12,7 @@ class ProviderHome extends ChangeNotifier {
   bool isLoading = true;
   bool checkData = true;
   bool checkSearchUser = true;
-  bool checkValue = true;
+  bool checkValue = false;
   String messageGetData = '';
   String messageDelete = '';
   String messageCreate = '';
@@ -88,13 +88,13 @@ class ProviderHome extends ChangeNotifier {
     }
   }
 
-  Future<void> searchUser({required String value}) async {
+  Future<void> searchUser({String? value}) async {
     try {
-      final List<UserModel> temp = await _homeServices.searchData(key, value);
+      final List<UserModel> temp = await _homeServices.searchData(key, value!);
       if (value != '') {
         _searchUser = temp;
         checkSearchUser = true;
-        checkValue = false;
+        checkValue = true;
         notifyListeners();
       }
     } catch (e) {
@@ -102,6 +102,7 @@ class ProviderHome extends ChangeNotifier {
       messageSearch = error.message.toString();
       _searchUser = [];
       checkSearchUser = false;
+      // checkValue = false;
       notifyListeners();
     }
   }
