@@ -58,28 +58,51 @@ class HomeServices extends HomeRepository {
   }
 
   @override
-  Future<List<UserModel>> searchData(String key, String query) async {
-    final tmp = query.toLowerCase();
+  Future<List<UserModel>> searchData(String? key, String? query) async {
+    final response =
+        await _restClient.get("/datauser", queryParameters: {key!: query});
+    final parameters;
+    if(key == null && query == null){
+      parameters = null;
+    }
+    else{
+      parameters = {key : query};
+    }
     try {
-      final response =
-          await _restClient.get("/datauser", queryParameters: {key: query});
+      if (key == null && query == null) {
+        final response = await _restClient.get(
+          "/datauser",
+        );
 
-      if (response is List<dynamic>) {
-        final data = response;
+        if (response is List<dynamic>) {
+          final users = response;
+          final List<UserModel> loadData = users.map((e) {
+            return UserModel.fromMap(e);
+          }).toList();
 
-        final List<UserModel> searchData = data.map((e) {
-          return UserModel.fromMap(e);
-        }).toList();
+          return loadData;
+        }
+      } else {
+        final response =
+            await _restClient.get("/datauser", queryParameters: {key: query});
 
-        final List<UserModel> filterData = searchData.where((e) {
-          return e.id.toLowerCase().contains(tmp) ||
-              e.name!.toLowerCase().contains(tmp) ||
-              e.address!.toLowerCase().contains(tmp) ||
-              e.mail!.toLowerCase().contains(tmp) ||
-              e.nationality!.toLowerCase().contains(tmp);
-        }).toList();
+        if (response is List<dynamic>) {
+          final data = response;
+          final tmp = query!.toLowerCase();
+          final List<UserModel> searchData = data.map((e) {
+            return UserModel.fromMap(e);
+          }).toList();
 
-        return filterData;
+          final List<UserModel> filterData = searchData.where((e) {
+            return e.id.toLowerCase().contains(tmp) ||
+                e.name!.toLowerCase().contains(tmp) ||
+                e.address!.toLowerCase().contains(tmp) ||
+                e.mail!.toLowerCase().contains(tmp) ||
+                e.nationality!.toLowerCase().contains(tmp);
+          }).toList();
+
+          return filterData;
+        }
       }
 
       throw ApiError.fromResponse(response);
