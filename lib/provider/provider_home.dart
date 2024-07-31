@@ -24,17 +24,31 @@ class ProviderHome extends ChangeNotifier {
   String key = 'id';
   List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
 
-  Future<void> getData() async {
+  Future<void> getData({String? key, String? value}) async {
     try {
-      final List<UserModel> temp = await _homeServices.getData();
-      _users = temp;
-      isLoading = false;
-      checkData = false;
+      final List<UserModel> temp; 
+      if( key != null && value != null){
+        temp = await _homeServices.getData(key: key, value: value);
+        if (value != '') {
+        _searchUser = temp;
+        checkSearchUser = true;
+        checkValue = true;
+      }
+      }
+      else{
+        temp = await _homeServices.getData();
+        _users = temp;
+        isLoading = false;
+        checkData = false;
+      }
+    
       notifyListeners();
     } catch (e) {
       ApiError error = e as ApiError;
       messageGetData = error.message.toString();
       isLoading = false;
+      _searchUser = [];
+      checkSearchUser = false;
       notifyListeners();
     }
   }
@@ -88,24 +102,24 @@ class ProviderHome extends ChangeNotifier {
     }
   }
 
-  Future<void> searchUser({String? value}) async {
-    try {
-      final List<UserModel> temp = await _homeServices.searchData(key, value!);
-      if (value != '') {
-        _searchUser = temp;
-        checkSearchUser = true;
-        checkValue = true;
-        notifyListeners();
-      }
-    } catch (e) {
-      ApiError error = e as ApiError;
-      messageSearch = error.message.toString();
-      _searchUser = [];
-      checkSearchUser = false;
-      // checkValue = false;
-      notifyListeners();
-    }
-  }
+  // Future<void> searchUser({String? value}) async {
+  //   try {
+  //     final List<UserModel> temp = await _homeServices.getData(key: key, value: value);
+  //     if (value != '') {
+  //       _searchUser = temp;
+  //       checkSearchUser = true;
+  //       checkValue = true;
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     ApiError error = e as ApiError;
+  //     messageSearch = error.message.toString();
+  //     _searchUser = [];
+  //     checkSearchUser = false;
+  //     // checkValue = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   void setKey(String newKey) {
     key = newKey;

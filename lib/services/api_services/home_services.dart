@@ -8,16 +8,25 @@ class HomeServices extends HomeRepository {
       RestClient(baseUrl: "https://66879c080bc7155dc0185037.mockapi.io");
 
   @override
-  Future<List<UserModel>> getData() async {
+  Future<List<UserModel>> getData({String? key, String? value}) async {
     try {
-      final response = await _restClient.get("/datauser");
+      final pragma = (key != null && value != null) ? {key: value} : null;
+      final response =
+          await _restClient.get("/datauser", queryParameters: pragma);
       if (response is List<dynamic>) {
-        final users = response;
-
-        final List<UserModel> loadData = users.map((e) {
+        final List<UserModel> loadData = response.map((e) {
           return UserModel.fromMap(e);
         }).toList();
-
+        if (key != null && value != null) {
+          final temp = value.toLowerCase();
+          return loadData.where((e) {
+            return e.id.toLowerCase().contains(temp) ||
+                e.name!.toLowerCase().contains(temp) ||
+                e.address!.toLowerCase().contains(temp) ||
+                e.mail!.toLowerCase().contains(temp) ||
+                e.nationality!.toLowerCase().contains(temp);
+          }).toList();
+        }
         return loadData;
       }
       throw ApiError.fromResponse(response);
@@ -65,7 +74,7 @@ class HomeServices extends HomeRepository {
 
   @override
   Future<List<UserModel>> searchData(String key, String query) async {
-    final tmp = query.toLowerCase();
+    final temp = query.toLowerCase();
     try {
       final response =
           await _restClient.get("/datauser", queryParameters: {key: query});
@@ -78,11 +87,11 @@ class HomeServices extends HomeRepository {
         }).toList();
 
         final List<UserModel> filterData = searchData.where((e) {
-          return e.id.toLowerCase().contains(tmp) ||
-              e.name!.toLowerCase().contains(tmp) ||
-              e.address!.toLowerCase().contains(tmp) ||
-              e.mail!.toLowerCase().contains(tmp) ||
-              e.nationality!.toLowerCase().contains(tmp);
+          return e.id.toLowerCase().contains(temp) ||
+              e.name!.toLowerCase().contains(temp) ||
+              e.address!.toLowerCase().contains(temp) ||
+              e.mail!.toLowerCase().contains(temp) ||
+              e.nationality!.toLowerCase().contains(temp);
         }).toList();
 
         return filterData;

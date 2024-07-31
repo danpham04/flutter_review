@@ -34,6 +34,12 @@ class _MySearchState extends State<MySearch> {
     final provider = Provider.of<ProviderHome>(context);
     return Scaffold(
       appBar: AppBarShared(
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Navigator.of(context).pushNamed(AppRoutes.homeScress);
+            }),
         titleName: 'Search User',
         colors: Colors.black,
         colorBack: const Color.fromARGB(255, 129, 185, 231),
@@ -50,10 +56,11 @@ class _MySearchState extends State<MySearch> {
             padding: const EdgeInsets.all(10.0),
             child: TextField(
               onChanged: (value) {
-                if (value.isEmpty) {
+                if (value == '') {
                   provider.clearSearchUser();
                 } else {
-                  provider.searchUser(value: value);
+                  // provider.searchUser(value: value);
+                  provider.getData(key: provider.key, value: value);
                 }
               },
               controller: _controllerSearch,
@@ -87,28 +94,28 @@ class _MySearchState extends State<MySearch> {
           ),
           Expanded(
             child: Consumer<ProviderHome>(
-              builder: (context, provider, child) {
-                if (provider.searchUserData.isEmpty) {
+              builder: (context, providers, child) {
+                if (providers.searchUserData.isEmpty) {
                   if (_controllerSearch.text == '') {
                     return Center(
                       child: Text(
                           'Please enter a search term with type ${provider.key}.'),
                     );
-                  } else if (provider.checkValue == true &&
-                      provider.checkSearchUser == false) {
+                  } else if (providers.checkValue == true &&
+                      providers.checkSearchUser == false) {
                     return const Center(
                       child: Text('No value!'),
                     );
                   } else {
                     return Center(
-                      child: Text(provider.messageSearch),
+                      child: Text(providers.messageSearch),
                     );
                   }
                 }
                 return ListView.builder(
-                  itemCount: provider.searchUserData.length,
+                  itemCount: providers.searchUserData.length,
                   itemBuilder: (context, index) {
-                    final users = provider.searchUserData[index];
+                    final users = providers.searchUserData[index];
                     return InforUser(users: users);
                   },
                 );
@@ -142,8 +149,10 @@ class _MySearchState extends State<MySearch> {
                         groupValue: providerHome.key,
                         onChanged: (value) {
                           providerHome.setKey(value as String);
-                          providerHome.searchUser(
-                              value: _controllerSearch.text);
+                          providerHome.clearSearchUser();
+                          // providerHome.getData(
+                          //     key: providerHome.key,
+                          //     value: _controllerSearch.text);
                           Navigator.pop(context);
                         },
                       );
