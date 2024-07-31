@@ -17,6 +17,9 @@ class EditUser extends StatefulWidget {
   State<EditUser> createState() => _EditUserState();
 }
 
+// TODO: chuyển contronller vào trong provider
+// tìm cách khởi tạo provider là một biến và sau đó dùng biến đó truy cập
+// vào các phần tử trong provider
 class _EditUserState extends State<EditUser> {
   late UserModel _user;
   late TextEditingController _controllerName;
@@ -25,6 +28,7 @@ class _EditUserState extends State<EditUser> {
   late TextEditingController _controllerAge;
   late TextEditingController _controllerNationality;
   late TextEditingController _controllerImg;
+  late final ProviderHome _providerHome;
 
   @override
   void initState() {
@@ -36,6 +40,7 @@ class _EditUserState extends State<EditUser> {
     _controllerNationality =
         TextEditingController(text: widget.users.nationality);
     _controllerImg = TextEditingController(text: widget.users.image);
+    _providerHome = Provider.of<ProviderHome>(context, listen: false);
     super.initState();
   }
 
@@ -144,7 +149,6 @@ class _EditUserState extends State<EditUser> {
   }
 
   Future<void> _editUserData() async {
-    final providerHome = Provider.of<ProviderHome>(context, listen: false);
     UserModel newUser = UserModel(
       image: _controllerImg.text,
       name: _controllerName.text,
@@ -156,7 +160,7 @@ class _EditUserState extends State<EditUser> {
     );
 
     bool success =
-        await providerHome.updateUser(newUser: newUser, id: _user.id);
+        await _providerHome.updateUser(newUser: newUser, id: _user.id);
 
     if (mounted) {
       if (success) {
@@ -164,7 +168,7 @@ class _EditUserState extends State<EditUser> {
             content: 'User ${_controllerName.text} updated successfully!');
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
       } else {
-        showCustomMess(content: providerHome.messageUpdate);
+        showCustomMess(content: _providerHome.messageUpdate);
       }
     }
   }

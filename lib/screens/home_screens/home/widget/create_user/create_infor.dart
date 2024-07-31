@@ -18,12 +18,26 @@ class CreateInfor extends StatefulWidget {
 }
 
 class _CreateInforState extends State<CreateInfor> {
-  final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerGmail = TextEditingController();
-  final TextEditingController _controllerAddress = TextEditingController();
-  final TextEditingController _controllerAge = TextEditingController();
-  final TextEditingController _controllerNationality = TextEditingController();
-  final TextEditingController _controllerId = TextEditingController();
+  late TextEditingController _controllerName;
+  late TextEditingController _controllerGmail;
+  late TextEditingController _controllerAddress;
+  late TextEditingController _controllerAge;
+  late TextEditingController _controllerNationality;
+  late TextEditingController _controllerId;
+  late final ProviderHome _providerHome;
+
+  @override
+  void initState() {
+    _controllerName = TextEditingController();
+    _controllerGmail = TextEditingController();
+    _controllerAddress = TextEditingController();
+    _controllerAge = TextEditingController();
+    _controllerNationality = TextEditingController();
+    _controllerId = TextEditingController();
+    // _controllerImg = TextEditingController();
+    _providerHome = Provider.of<ProviderHome>(context, listen: false);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -33,6 +47,7 @@ class _CreateInforState extends State<CreateInfor> {
     _controllerAge.dispose();
     _controllerNationality.dispose();
     _controllerId.dispose();
+
     super.dispose();
   }
 
@@ -123,7 +138,6 @@ class _CreateInforState extends State<CreateInfor> {
   }
 
   Future<void> _updateDataUser() async {
-    final providerHome = Provider.of<ProviderHome>(context, listen: false);
     UserModel newUser = UserModel(
       image:
           "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
@@ -135,14 +149,14 @@ class _CreateInforState extends State<CreateInfor> {
       id: _controllerId.text,
     );
 
-    bool success = await providerHome.createUser(newUser: newUser);
+    bool success = await _providerHome.createUser(newUser: newUser);
 
     if (mounted) {
       if (success) {
-        showCustomMess(content: providerHome.messageCreate);
+        showCustomMess(content: _providerHome.messageCreate);
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
       } else {
-        showCustomMess(content: providerHome.messageCreate);
+        showCustomMess(content: _providerHome.messageCreate);
       }
     }
   }
