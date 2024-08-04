@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/provider/provider_connectivity.dart';
@@ -26,11 +23,21 @@ class HomeScress extends StatefulWidget {
 }
 
 class _HomeScressState extends State<HomeScress> {
+  late ProviderHome providerHome;
+  @override
+  void initState() {
+    providerHome = Provider.of<ProviderHome>(context, listen: false);
+    super.initState();
+  }
   @override
   void didChangeDependencies() {
     final ProviderConnectivity provider =
         Provider.of<ProviderConnectivity>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (provider.check) {
+        
+        providerHome.getData();
+      }
       _checkConnect(provider.messConnect);
     });
     super.didChangeDependencies();
@@ -113,13 +120,15 @@ class _HomeScressState extends State<HomeScress> {
             ],
           ),
         ),
-        body: const Center(
+        body: Center(
           child: TabBarView(
             children: [
-              Home(),
-              Feed(),
-              Profile(),
-              Settings(),
+              Home(
+                providerHome: providerHome,
+              ),
+              const Feed(),
+              const Profile(),
+              const Settings(),
             ],
           ),
         ),

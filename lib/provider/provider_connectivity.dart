@@ -5,7 +5,8 @@ import 'package:flutter/cupertino.dart';
 class ProviderConnectivity extends ChangeNotifier {
   late StreamSubscription<List<ConnectivityResult>> _subscription;
   final Connectivity _connectivity = Connectivity();
-  String messConnect = 'Không có thay đổi';
+  String messConnect = 'Kiểm tra kết nối';
+  bool check = false;
 
   ProviderConnectivity() {
     _subscription =
@@ -14,11 +15,16 @@ class ProviderConnectivity extends ChangeNotifier {
 
   void _connectionStatus(List<ConnectivityResult> result) {
     if (result.contains(ConnectivityResult.mobile)) {
-      messConnect = 'Quay lại trực tuyến \n Đang sử dụng dữ liệu di động';
+      messConnect = 'Bạn Đang sử dụng dữ liệu di động';
+      check = true;
     } else if (result.contains(ConnectivityResult.wifi)) {
-      messConnect = 'Quay lại trực tuyến \n Đang sử dụng wifi';
-    } else {
+      messConnect = 'Bạn Đang sử dụng wifi';
+      check = true;
+    } else if(result.contains(ConnectivityResult.none)){
       messConnect = ' Bạn đang không có kết nối mạng';
+      check = false;
+    }else{
+      messConnect = 'Có lỗi sảy ra';
     }
     notifyListeners();
   }

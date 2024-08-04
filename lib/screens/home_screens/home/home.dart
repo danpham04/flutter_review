@@ -11,20 +11,21 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-
+  const Home({super.key, required this.providerHome});
+  final ProviderHome providerHome;
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  late final ProviderHome _providerHome;
+  late final ProviderHome _providerHome = widget.providerHome;
 
   @override
   void initState() {
     super.initState();
-    _providerHome = Provider.of<ProviderHome>(context, listen: false);
-    _getData();
+    // _providerHome = Provider.of<ProviderHome>(context, listen: false);
+    // _getData();
+
   }
 
   void _getData() async {
