@@ -75,7 +75,7 @@ class _MySearchState extends State<MySearch> {
                     onPressed: () {
                       text = _controllerSearch.text;
                       if (text.isEmpty) {
-                        Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                        Navigator.of(context).pushNamed(AppRoutes.homeScreens);
                       } else {
                         _controllerSearch.text = '';
                       }

@@ -11,18 +11,18 @@ import 'package:flutter_review/screens/home_screens/widget/tabbar_home.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:provider/provider.dart';
 
-class HomeScress extends StatefulWidget {
-  const HomeScress({
+class HomeScreens extends StatefulWidget {
+  const HomeScreens({
     super.key,
     this.load = true,
   });
   final bool load;
 
   @override
-  State<HomeScress> createState() => _HomeScressState();
+  State<HomeScreens> createState() => _HomeScreensState();
 }
 
-class _HomeScressState extends State<HomeScress> {
+class _HomeScreensState extends State<HomeScreens> {
   late ProviderHome providerHome;
   @override
   void initState() {

@@ -119,7 +119,7 @@ class ShowInfor extends StatelessWidget {
             TextButton(
               child: const Text('Delete'),
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.homeScress);
+                Navigator.of(context).pushNamed(AppRoutes.homeScreens);
                 HomeServices().deleteData(showUser.id);
               },
             ),

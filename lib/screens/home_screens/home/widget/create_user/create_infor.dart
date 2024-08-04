@@ -118,7 +118,7 @@ class _CreateInforState extends State<CreateInfor> {
     if (mounted) {
       showCustomMess(content: provider.messageCreate);
       if (success) {
-        await Navigator.of(context).pushNamed(AppRoutes.homeScress);
+        await Navigator.of(context).pushNamed(AppRoutes.homeScreens);
       } 
     }
   }

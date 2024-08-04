@@ -17,49 +17,53 @@ class _InputLoginState extends State<InputLogin> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 8.0),
-          child: TextLogin(text: "Nhập thông tin gmail của bạn!"),
-        ),
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: "Type your mail?",
-            prefixIcon: Icon(Icons.mail),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: TextLogin(text: "Nhập thông tin gmail của bạn!"),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              hintText: "Type your mail?",
+              prefixIcon: Icon(Icons.person),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
               ),
             ),
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
-          child: TextLogin(text: "Nhập Password của bạn!"),
-        ),
-        TextFormField(
-          obscureText: showPassword,
-          decoration: InputDecoration(
-            hintText: "Type your password?",
-            prefixIcon: const Icon(Icons.password),
-            suffixIcon: IconButton(
-              icon: Icon(showPassword ? Icons.remove_red_eye : Icons.lock),
-              onPressed: () {
-                setState(() {
-                  showPassword = !showPassword;
-                });
-              },
-            ),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
+            child: TextLogin(text: "Nhập Password của bạn!"),
+          ),
+          TextFormField(
+            obscureText: showPassword,
+            decoration: InputDecoration(
+              hintText: "Type your password?",
+              prefixIcon: const Icon(Icons.lock),
+              suffixIcon: IconButton(
+                icon: Icon(
+                    showPassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () {
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+              ),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
               ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

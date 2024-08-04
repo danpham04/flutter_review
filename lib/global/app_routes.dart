@@ -25,8 +25,8 @@ class AppRoutes {
     switch (routeName) {
       case login:
         return const Login();
-      case homeScress:
-        return const HomeScress();
+      case homeScreens:
+        return const HomeScreens();
       case showInfor:
         return ShowInfor(showUser: arguments as UserModel);
       case createData:
@@ -41,8 +41,8 @@ class AppRoutes {
   }
 
   // define named Routes
-  static const String login = '/login';
-  static const String homeScress = '/';
+  static const String login = '/';
+  static const String homeScreens = '/home_screens';
   static const String showInfor = '/show_infor';
   static const String createData = '/create_data';
   static const String updateData = '/update_data';

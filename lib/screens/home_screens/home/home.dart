@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
                                                   onPressed: () async {
                                                     Navigator.of(context)
                                                         .pushNamed(AppRoutes
-                                                            .homeScress);
+                                                            .homeScreens);
                                                     await _providerHome
                                                         .deleteUser(
                                                             id: user.id,

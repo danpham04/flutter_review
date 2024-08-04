@@ -129,7 +129,7 @@ class _EditUserState extends State<EditUser> {
     if (mounted) {
       showCustomMess(content: provider.messageUpdate);
       if (success) {
-        await Navigator.of(context).pushNamed(AppRoutes.homeScress);
+        await Navigator.of(context).pushNamed(AppRoutes.homeScreens);
       }
     }
   }
