@@ -73,54 +73,6 @@ class ProviderHome extends ChangeNotifier {
     }
   }
 
-  Future<bool> createUser({required UserModel newUser}) async {
-    try {
-      await _homeServices.createData(newUser);
-      messageCreate = 'Tao nguoi dung thanh cong';
-      notifyListeners();
-      return true;
-    } catch (e) {
-      ApiError error = e as ApiError;
-      messageCreate = error.message.toString();
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> updateUser(
-      {required String id, required UserModel newUser}) async {
-    try {
-      await _homeServices.updateData(newUser: newUser, id: id);
-      messageUpdate = 'Cap nhat nguoi dung thanh cong';
-      notifyListeners();
-      return true;
-    } catch (e) {
-      ApiError error = e as ApiError;
-      messageUpdate = error.message.toString();
-      notifyListeners();
-      return false;
-    }
-  }
-
-  // Future<void> searchUser({String? value}) async {
-  //   try {
-  //     final List<UserModel> temp = await _homeServices.getData(key: key, value: value);
-  //     if (value != '') {
-  //       _searchUser = temp;
-  //       checkSearchUser = true;
-  //       checkValue = true;
-  //       notifyListeners();
-  //     }
-  //   } catch (e) {
-  //     ApiError error = e as ApiError;
-  //     messageSearch = error.message.toString();
-  //     _searchUser = [];
-  //     checkSearchUser = false;
-  //     // checkValue = false;
-  //     notifyListeners();
-  //   }
-  // }
-
   void setKey(String newKey) {
     key = newKey;
     notifyListeners();

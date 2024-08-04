@@ -82,14 +82,14 @@ class ShowInfor extends StatelessWidget {
                 children: [
                   ClipOval(
                     child: Image.network(
-                      showUser.image ?? '',
+                      showUser.image,
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,
                     ),
                   ),
                   TextInfor(
-                    text: showUser.name ?? '',
+                    text: showUser.name,
                     sizeText: 25,
                     colorText: Colors.black,
                   ),

@@ -10,14 +10,14 @@ class InforUser extends StatelessWidget {
     return ListTile(
       leading: ClipOval(
         child: Image.network(
-          users.image ?? '',
+          users.image,
           width: 50,
           height: 50,
           fit: BoxFit.cover,
         ),
       ),
-      title: Text(users.name ?? ''),
-      subtitle: Text(users.mail ?? ''),
+      title: Text(users.name),
+      subtitle: Text(users.mail),
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.showInfor, arguments: users);
       },

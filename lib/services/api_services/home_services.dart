@@ -21,10 +21,10 @@ class HomeServices extends HomeRepository {
           final temp = value.toLowerCase();
           return loadData.where((e) {
             return e.id.toLowerCase().contains(temp) ||
-                e.name!.toLowerCase().contains(temp) ||
-                e.address!.toLowerCase().contains(temp) ||
-                e.mail!.toLowerCase().contains(temp) ||
-                e.nationality!.toLowerCase().contains(temp);
+                e.name.toLowerCase().contains(temp) ||
+                e.address.toLowerCase().contains(temp) ||
+                e.mail.toLowerCase().contains(temp) ||
+                e.nationality.toLowerCase().contains(temp);
           }).toList();
         }
         return loadData;
@@ -72,36 +72,6 @@ class HomeServices extends HomeRepository {
     }
   }
 
-  @override
-  Future<List<UserModel>> searchData(String key, String query) async {
-    final temp = query.toLowerCase();
-    try {
-      final response =
-          await _restClient.get("/datauser", queryParameters: {key: query});
-
-      if (response is List<dynamic>) {
-        final data = response;
-
-        final List<UserModel> searchData = data.map((e) {
-          return UserModel.fromMap(e);
-        }).toList();
-
-        final List<UserModel> filterData = searchData.where((e) {
-          return e.id.toLowerCase().contains(temp) ||
-              e.name!.toLowerCase().contains(temp) ||
-              e.address!.toLowerCase().contains(temp) ||
-              e.mail!.toLowerCase().contains(temp) ||
-              e.nationality!.toLowerCase().contains(temp);
-        }).toList();
-
-        return filterData;
-      }
-
-      throw ApiError.fromResponse(response);
-    } catch (error) {
-      rethrow;
-    }
-  }
 
   @override
   Future<UserModel> updateData(

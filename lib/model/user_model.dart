@@ -1,20 +1,20 @@
 class UserModel {
-  String? image;
-  String? name;
-  String? mail;
-  String? address;
-  String? dateOfBirth;
-  String? nationality;
-  String id;
+  final String image;
+  final String name;
+  final String mail;
+  final String address;
+  final String dateOfBirth;
+  final String nationality;
+  final String id;
 
   UserModel(
-      {this.image,
-      this.name,
-      this.mail,
-      this.address,
-      this.dateOfBirth,
-      this.nationality,
-      required this.id
+      {required this.image,
+       required this.name,
+      required this.mail,
+      required this.address,
+      required this.dateOfBirth,
+      required this.nationality,
+      this.id =''
       });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {

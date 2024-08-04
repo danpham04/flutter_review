@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
-import 'package:flutter_review/model/user_model.dart';
-import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/provider/provider_create.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/button_dig_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
@@ -18,41 +17,9 @@ class CreateInfor extends StatefulWidget {
 }
 
 class _CreateInforState extends State<CreateInfor> {
-  late TextEditingController _controllerName;
-  late TextEditingController _controllerGmail;
-  late TextEditingController _controllerAddress;
-  late TextEditingController _controllerAge;
-  late TextEditingController _controllerNationality;
-  late TextEditingController _controllerId;
-  late final ProviderHome _providerHome;
-
-  @override
-  void initState() {
-    _controllerName = TextEditingController();
-    _controllerGmail = TextEditingController();
-    _controllerAddress = TextEditingController();
-    _controllerAge = TextEditingController();
-    _controllerNationality = TextEditingController();
-    _controllerId = TextEditingController();
-    // _controllerImg = TextEditingController();
-    _providerHome = Provider.of<ProviderHome>(context, listen: false);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controllerName.dispose();
-    _controllerGmail.dispose();
-    _controllerAddress.dispose();
-    _controllerAge.dispose();
-    _controllerNationality.dispose();
-    _controllerId.dispose();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final ProviderCreate providerCreate = context.watch<ProviderCreate>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBarShared(
@@ -65,29 +32,34 @@ class _CreateInforState extends State<CreateInfor> {
           child: Column(
             children: [
               PadingTextField(
-                labelText: "Enter the name you want to add",
+                labelText: "Enter the img you want to create",
+                hintText: 'Nhập đường dẫn ảnh ',
+                textController: providerCreate.controllerImg,
+              ),
+              PadingTextField(
+                labelText: "Enter the name you want to create",
                 hintText: 'Nhập tên',
-                textController: _controllerName,
+                textController: providerCreate.controllerName,
               ),
               PadingTextField(
-                labelText: "Enter the gmail you want to add",
+                labelText: "Enter the gmail you want to create",
                 hintText: 'Nhập gmail',
-                textController: _controllerGmail,
+                textController: providerCreate.controllerGmail,
               ),
               PadingTextField(
-                labelText: "Enter the address you want to add",
+                labelText: "Enter the address you want to create",
                 hintText: 'Nhập địa chỉ',
-                textController: _controllerAddress,
+                textController: providerCreate.controllerAddress,
               ),
               PadingTextField(
-                labelText: "Enter the date of birth you want to add",
+                labelText: "Enter the date of birth you want to create",
                 hintText: 'Nhập ngày sinh',
-                textController: _controllerAge,
+                textController: providerCreate.controllerAge,
               ),
               PadingTextField(
-                labelText: "Enter the nationality you want to add",
+                labelText: "Enter the nationality you want to create",
                 hintText: 'Nhập quốc tịch',
-                textController: _controllerNationality,
+                textController: providerCreate.controllerNationality,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -97,7 +69,7 @@ class _CreateInforState extends State<CreateInfor> {
                           const Color.fromARGB(255, 149, 196, 235)),
                   onPressed: () {
                     // await _updateDataUser();
-                    _showDialog();
+                    _showDialog(providerCreate);
                   },
                   child: const TextInfor(
                     text: 'Add User',
@@ -112,7 +84,7 @@ class _CreateInforState extends State<CreateInfor> {
     );
   }
 
-  void _showDialog() {
+  void _showDialog(ProviderCreate provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -122,13 +94,16 @@ class _CreateInforState extends State<CreateInfor> {
           actions: [
             ButtonDigLog(
               text: 'Cancel',
+              color: Colors.black,
               onPressed: () => Navigator.of(context).pop(),
             ),
             ButtonDigLog(
               text: 'Create',
+              color: Colors.black,
               onPressed: () async {
                 Navigator.of(context).pop();
-                await _updateDataUser();
+                await _updateDataUser(provider);
+                
               },
             )
           ],
@@ -137,27 +112,14 @@ class _CreateInforState extends State<CreateInfor> {
     );
   }
 
-  Future<void> _updateDataUser() async {
-    UserModel newUser = UserModel(
-      image:
-          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/877.jpg",
-      name: _controllerName.text,
-      mail: _controllerGmail.text,
-      address: _controllerAddress.text,
-      dateOfBirth: _controllerAge.text,
-      nationality: _controllerNationality.text,
-      id: _controllerId.text,
-    );
-
-    bool success = await _providerHome.createUser(newUser: newUser);
+  Future<void> _updateDataUser(ProviderCreate provider) async {
+    bool success = await provider.createUser();
 
     if (mounted) {
+      showCustomMess(content: provider.messageCreate);
       if (success) {
-        showCustomMess(content: _providerHome.messageCreate);
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
-      } else {
-        showCustomMess(content: _providerHome.messageCreate);
-      }
+      } 
     }
   }
 

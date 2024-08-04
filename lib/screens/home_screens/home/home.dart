@@ -29,7 +29,6 @@ class _HomeState extends State<Home> {
 
   void _getData() async {
     await _providerHome.getData();
-    
   }
 
   @override
@@ -108,7 +107,6 @@ class _HomeState extends State<Home> {
                                                 ),
                                                 ButtonDigLog(
                                                   onPressed: () async {
-                                                    
                                                     Navigator.of(context)
                                                         .pushNamed(AppRoutes
                                                             .homeScress);

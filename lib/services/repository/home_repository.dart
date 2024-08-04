@@ -2,9 +2,7 @@ import 'package:flutter_review/model/user_model.dart';
 
 abstract class HomeRepository{
   
-  Future<List<UserModel>> getData();
-
-  Future<List<UserModel>> searchData(String key, String query);
+  Future<List<UserModel>> getData({String? key, String? value});
 
   Future<bool> deleteData(String id);
 

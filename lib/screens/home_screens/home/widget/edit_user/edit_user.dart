@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
-import 'package:flutter_review/provider/provider_home.dart';
+import 'package:flutter_review/provider/provider_update.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/button_dig_log.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/pading_text_field.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
@@ -21,42 +21,17 @@ class EditUser extends StatefulWidget {
 // tìm cách khởi tạo provider là một biến và sau đó dùng biến đó truy cập
 // vào các phần tử trong provider
 class _EditUserState extends State<EditUser> {
-  late UserModel _user;
-  late TextEditingController _controllerName;
-  late TextEditingController _controllerGmail;
-  late TextEditingController _controllerAddress;
-  late TextEditingController _controllerAge;
-  late TextEditingController _controllerNationality;
-  late TextEditingController _controllerImg;
-  late final ProviderHome _providerHome;
-
   @override
   void initState() {
-    _user = widget.users;
-    _controllerName = TextEditingController(text: widget.users.name);
-    _controllerGmail = TextEditingController(text: widget.users.mail);
-    _controllerAddress = TextEditingController(text: widget.users.address);
-    _controllerAge = TextEditingController(text: widget.users.dateOfBirth);
-    _controllerNationality =
-        TextEditingController(text: widget.users.nationality);
-    _controllerImg = TextEditingController(text: widget.users.image);
-    _providerHome = Provider.of<ProviderHome>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProviderUpdate>().defaultValueText(widget.users);
+    });
     super.initState();
   }
 
   @override
-  void dispose() {
-    _controllerName.dispose();
-    _controllerGmail.dispose();
-    _controllerAge.dispose();
-    _controllerAddress.dispose();
-    _controllerNationality.dispose();
-    _controllerImg.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final ProviderUpdate providerUpdate = context.watch<ProviderUpdate>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBarShared(
@@ -69,34 +44,34 @@ class _EditUserState extends State<EditUser> {
           child: Column(
             children: [
               PadingTextField(
-                labelText: "Enter the name you want to add",
-                hintText: 'Nhập đường dẫn ảnh',
-                textController: _controllerImg,
+                labelText: "Enter the img you want to add",
+                hintText: 'Nhập đường dẫn ảnh ',
+                textController: providerUpdate.controllerImg,
               ),
               PadingTextField(
                 labelText: "Enter the name you want to add",
                 hintText: 'Nhập tên',
-                textController: _controllerName,
+                textController: providerUpdate.controllerName,
               ),
               PadingTextField(
                 labelText: "Enter the gmail you want to add",
                 hintText: 'Nhập gmail',
-                textController: _controllerGmail,
+                textController: providerUpdate.controllerGmail,
               ),
               PadingTextField(
                 labelText: "Enter the address you want to add",
                 hintText: 'Nhập địa chỉ',
-                textController: _controllerAddress,
+                textController: providerUpdate.controllerAddress,
               ),
               PadingTextField(
                 labelText: "Enter the date of birth you want to add",
                 hintText: 'Nhập ngày sinh',
-                textController: _controllerAge,
+                textController: providerUpdate.controllerAge,
               ),
               PadingTextField(
                 labelText: "Enter the nationality you want to add",
                 hintText: 'Nhập quốc tịch',
-                textController: _controllerNationality,
+                textController: providerUpdate.controllerNationality,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -105,7 +80,7 @@ class _EditUserState extends State<EditUser> {
                       backgroundColor:
                           const Color.fromARGB(255, 149, 196, 235)),
                   onPressed: () {
-                    _showDialog();
+                    _showDialog(providerUpdate);
                   },
                   child: const TextInfor(
                     text: 'Update user',
@@ -120,7 +95,7 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
-  void _showDialog() {
+  void _showDialog(ProviderUpdate provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -139,7 +114,7 @@ class _EditUserState extends State<EditUser> {
               text: 'Create',
               onPressed: () async {
                 Navigator.of(context).pop();
-                await _editUserData();
+                await _editUserData(provider);
               },
             )
           ],
@@ -148,27 +123,13 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
-  Future<void> _editUserData() async {
-    UserModel newUser = UserModel(
-      image: _controllerImg.text,
-      name: _controllerName.text,
-      mail: _controllerGmail.text,
-      address: _controllerAddress.text,
-      dateOfBirth: _controllerAge.text,
-      nationality: _controllerNationality.text,
-      id: _user.id,
-    );
-
-    bool success =
-        await _providerHome.updateUser(newUser: newUser, id: _user.id);
+  Future<void> _editUserData(ProviderUpdate provider) async {
+    bool success = await provider.updateUser(id: widget.users.id);
 
     if (mounted) {
+      showCustomMess(content: provider.messageUpdate);
       if (success) {
-        showCustomMess(
-            content: 'User ${_controllerName.text} updated successfully!');
         await Navigator.of(context).pushNamed(AppRoutes.homeScress);
-      } else {
-        showCustomMess(content: _providerHome.messageUpdate);
       }
     }
   }
