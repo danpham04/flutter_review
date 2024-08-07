@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/provider/provider_connectivity.dart';
 import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/screens/home_screens/feed/feed.dart';
 import 'package:flutter_review/screens/home_screens/home/home.dart';
+import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
 import 'package:flutter_review/screens/home_screens/profile/profile.dart';
 import 'package:flutter_review/screens/home_screens/settings/settings.dart';
 import 'package:flutter_review/screens/home_screens/widget/tab_icon.dart';
@@ -29,37 +31,46 @@ class _HomeScreensState extends State<HomeScreens> {
     providerHome = Provider.of<ProviderHome>(context, listen: false);
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
     final ProviderConnectivity provider =
         Provider.of<ProviderConnectivity>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (provider.check) {
-        
         providerHome.getData();
+      } else {
+        (providerHome.loadUser.isEmpty && providerHome.checkData)
+            ? _showDigLog(
+                title: 'Thông báo',
+                content:
+                    'Bạn đã Không có kết nối, không có dữ liệu đã lưu trên máy',
+                action: [
+                  CupertinoDialogAction(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        providerHome.getData();
+                        Navigator.of(context).pop();
+                      })
+                ],
+              )
+            : _showDigLog(
+                title: 'Thông báo',
+                content: 'Bạn đã mất kết nối, hiển thị dữ liệu đã lưu ',
+                action: [
+                  CupertinoDialogAction(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        providerHome.getData();
+                        Navigator.of(context).pop();
+                      })
+                ],
+              );
       }
       _checkConnect(provider.messConnect);
     });
     super.didChangeDependencies();
   }
-
-  // late StreamSubscription<List<ConnectivityResult>> subscription;
-  // @override
-  // void initState() {
-  //   subscription = Connectivity()
-  //       .onConnectivityChanged
-  //       .listen((List<ConnectivityResult> result) {
-  //     if (result.contains(ConnectivityResult.mobile)) {
-  //       return _checkConnect(
-  //           'Quay lại trực tuyến \n Đang sử dụng dữ liệu di động');
-  //     } else if (result.contains(ConnectivityResult.wifi)) {
-  //       return _checkConnect('Quay lại trực tuyến \n Đang sử dụng wifi');
-  //     } else {
-  //       return _checkConnect(' Bạn đang không có kết nối mạng');
-  //     }
-  //   });
-  //   super.initState();
-  // }
 
   void _checkConnect(String messenger) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -67,12 +78,19 @@ class _HomeScreensState extends State<HomeScreens> {
     ));
   }
 
-  // void _checkConnect() {
-  //   final connectivityResult = context.read<ProviderConnectivity>().messConnect;
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     content: Text(connectivityResult),
-  //   ));
-  // }
+  void _showDigLog(
+      {required String title, required String content, List<Widget>? action}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowDiaLog(
+          title: title,
+          content: content,
+          actions: action,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
