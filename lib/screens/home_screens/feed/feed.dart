@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
 import 'package:flutter_review/provider/provider_home.dart';
-import 'package:flutter_review/services/api_services/home_services.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -20,9 +19,6 @@ class _FeedState extends State<Feed> {
 
   late ProviderHome provider;
   
-
-  final HomeServices _homeService = HomeServices();
-
   @override
   void initState() {
     provider = Provider.of<ProviderHome>(context, listen: false);
