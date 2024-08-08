@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowDiaLog extends StatelessWidget {
@@ -21,7 +20,7 @@ class ShowDiaLog extends StatelessWidget {
       content: Text(content),
       actions: actions ??
           [
-            CupertinoDialogAction(
+            TextButton(
                 child: const Text('Ok'),
                 onPressed: () {
                   Navigator.of(context).pop();

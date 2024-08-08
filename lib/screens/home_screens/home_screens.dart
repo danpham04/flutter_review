@@ -40,32 +40,33 @@ class _HomeScreensState extends State<HomeScreens> {
       if (provider.check) {
         providerHome.getData();
       } else {
-        (providerHome.loadUser.isEmpty && providerHome.checkData)
-            ? _showDigLog(
-                title: 'Thông báo',
-                content:
-                    'Bạn đã Không có kết nối, không có dữ liệu đã lưu trên máy',
-                action: [
-                  CupertinoDialogAction(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        providerHome.getData();
-                        Navigator.of(context).pop();
-                      })
-                ],
-              )
-            : _showDigLog(
-                title: 'Thông báo',
-                content: 'Bạn đã mất kết nối, hiển thị dữ liệu đã lưu ',
-                action: [
-                  CupertinoDialogAction(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        providerHome.getData();
-                        Navigator.of(context).pop();
-                      })
-                ],
-              );
+        if (provider.messConnect == 'Bạn đang không có kết nối mạng') {
+          (providerHome.loadUser.isEmpty && providerHome.checkData)
+              ? _showDigLog(
+                  title: 'Thông báo',
+                  content:
+                      'Bạn đã Không có kết nối, không có dữ liệu đã lưu trên máy',
+                  action: [
+                    CupertinoDialogAction(
+                        child: const Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                )
+              : _showDigLog(
+                  title: 'Thông báo',
+                  content: 'Bạn đã mất kết nối, hiển thị dữ liệu đã lưu ',
+                  action: [
+                    CupertinoDialogAction(
+                        child: const Text('Ok'),
+                        onPressed: () {
+                          providerHome.getData();
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                );
+        }
       }
       _checkConnect(provider.messConnect);
     });

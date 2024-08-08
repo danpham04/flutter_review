@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
+import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/services/api_services/home_services.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Feed extends StatefulWidget {
@@ -16,23 +18,18 @@ class _FeedState extends State<Feed> {
   int _curr = 0;
   final _controller = CarouselController();
 
-  List<UserModel> loadUser = [];
+  late ProviderHome provider;
+  
 
   final HomeServices _homeService = HomeServices();
 
   @override
   void initState() {
-    getData();
+    provider = Provider.of<ProviderHome>(context, listen: false);
     super.initState();
   }
 
-  void getData() async {
-    final List<UserModel> loadUserTemp = await _homeService.getData();
-
-    setState(() {
-      loadUser = loadUserTemp;
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +41,12 @@ class _FeedState extends State<Feed> {
         ),
         Center(
           child: CarouselSlider.builder(
-            itemCount: loadUser.length,
+            itemCount: provider.loadUser.length,
             itemBuilder: (context, index, realIndex) {
               // final users = loadUser[index];
 
-              if (loadUser.isNotEmpty) {
-                final UserModel users = loadUser[index];
+              if (provider.loadUser.isNotEmpty) {
+                final UserModel users = provider.loadUser[index];
 
                 return GestureDetector(
                   onTap: () {
@@ -86,7 +83,7 @@ class _FeedState extends State<Feed> {
           padding: const EdgeInsets.all(10.0),
           child: AnimatedSmoothIndicator(
             activeIndex: _curr,
-            count: loadUser.length,
+            count: provider.loadUser.length,
             effect: const JumpingDotEffect(
               dotHeight: 10,
               dotWidth: 10,

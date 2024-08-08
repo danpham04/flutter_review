@@ -21,7 +21,7 @@ class ProviderConnectivity extends ChangeNotifier {
       messConnect = 'Bạn Đang sử dụng wifi';
       check = true;
     } else if(result.contains(ConnectivityResult.none)){
-      messConnect = ' Bạn đang không có kết nối mạng';
+      messConnect = 'Bạn đang không có kết nối mạng';
       check = false;
     }else{
       messConnect = 'Có lỗi sảy ra';
