@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
+import 'package:flutter_review/provider/notification_handler.dart';
 import 'package:flutter_review/provider/provider_connectivity.dart';
 import 'package:flutter_review/provider/provider_create.dart';
 import 'package:flutter_review/provider/provider_home.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => ProviderConnectivity(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationHandler.instance(),
         )
       ],
       child: const MaterialApp(
