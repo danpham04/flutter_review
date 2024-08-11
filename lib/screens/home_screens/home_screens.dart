@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/provider/provider_connectivity.dart';
-import 'package:flutter_review/provider/provider_home.dart';
 import 'package:flutter_review/screens/home_screens/feed/feed.dart';
 import 'package:flutter_review/screens/home_screens/home/home.dart';
 import 'package:flutter_review/screens/home_screens/home/widget/show_dia_log.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_review/screens/home_screens/profile/profile.dart';
 import 'package:flutter_review/screens/home_screens/settings/settings.dart';
 import 'package:flutter_review/screens/home_screens/widget/tab_icon.dart';
 import 'package:flutter_review/screens/home_screens/widget/tabbar_home.dart';
+import 'package:flutter_review/store/home_store.dart';
 import 'package:flutter_review/widgets/app_bar_shared.dart';
 import 'package:provider/provider.dart';
 
@@ -25,10 +25,10 @@ class HomeScreens extends StatefulWidget {
 }
 
 class _HomeScreensState extends State<HomeScreens> {
-  late ProviderHome providerHome;
+  late HomeStore homeStore;
   @override
   void initState() {
-    providerHome = Provider.of<ProviderHome>(context, listen: false);
+    homeStore = HomeStore();
     super.initState();
   }
 
@@ -38,10 +38,10 @@ class _HomeScreensState extends State<HomeScreens> {
         Provider.of<ProviderConnectivity>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (provider.check) {
-        providerHome.getData();
+        homeStore.getData();
       } else {
         if (provider.messConnect == 'Bạn đang không có kết nối mạng') {
-          (providerHome.loadUser.isEmpty && providerHome.checkData)
+          ( homeStore.loadUser.isEmpty &&  homeStore.checkData)
               ? _showDigLog(
                   title: 'Thông báo',
                   content:
@@ -61,7 +61,7 @@ class _HomeScreensState extends State<HomeScreens> {
                     CupertinoDialogAction(
                         child: const Text('Ok'),
                         onPressed: () {
-                          providerHome.getData();
+                           homeStore.getData();
                           Navigator.of(context).pop();
                         })
                   ],
@@ -143,7 +143,7 @@ class _HomeScreensState extends State<HomeScreens> {
           child: TabBarView(
             children: [
               Home(
-                providerHome: providerHome,
+                homeStore:  homeStore,
               ),
               const Feed(),
               const Profile(),
