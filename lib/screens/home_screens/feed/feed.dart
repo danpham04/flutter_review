@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' ;
 import 'package:flutter/material.dart';
 import 'package:flutter_review/global/app_routes.dart';
 import 'package:flutter_review/model/user_model.dart';
@@ -15,17 +15,15 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   int _curr = 0;
-  final _controller = CarouselController();
+  final CarouselSliderController _controller = CarouselSliderController();
 
   late ProviderHome provider;
-  
+
   @override
   void initState() {
     provider = Provider.of<ProviderHome>(context, listen: false);
     super.initState();
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +35,7 @@ class _FeedState extends State<Feed> {
         ),
         Center(
           child: CarouselSlider.builder(
+
             itemCount: provider.loadUser.length,
             itemBuilder: (context, index, realIndex) {
               // final users = loadUser[index];
