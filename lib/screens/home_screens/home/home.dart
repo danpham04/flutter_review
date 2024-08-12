@@ -11,17 +11,20 @@ import 'package:flutter_review/widgets/show_messenger.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.homeStore});
-  final HomeStore homeStore;
+  const Home({
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final HomeStore homeStores = HomeStore();
+
   @override
   void initState() {
-    widget.homeStore.getData();
+    homeStores.getData();
     super.initState();
   }
 
@@ -30,107 +33,86 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Observer(
         builder: (_) {
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: widget.homeStore.isLoading
-                ? const ProgressShared()
-                : widget.homeStore.users.isEmpty
-                    ? widget.homeStore.checkData
-                        ? ShowDiaLog(
-                            content: widget.homeStore.messageGetData,
-                            title: 'Lỗi',
-                            actions: [
-                              ButtonDigLog(
-                                text: 'OK',
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
-                            ],
-                            color: Colors.blue[100],
-                          )
-                        : ShowDiaLog(
-                            content: 'Không có dữ liệu',
-                            title: 'Thông báo',
-                            actions: [
-                              ButtonDigLog(
-                                text: 'OK',
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
-                            ],
-                            color: Colors.blue[100],
-                          )
-                    : Observer(
-                        builder: (_) {
-                          return ListView.builder(
-                            itemCount: widget.homeStore.users.length,
-                            itemBuilder: (context, index) {
-                              final UserModel user =
-                                  widget.homeStore.users[index];
-                              return Slidable(
-                                key: Key(index.toString()),
-                                endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        Navigator.of(context).pushNamed(
-                                            AppRoutes.updateData,
-                                            arguments: user);
-                                      },
-                                      backgroundColor: Colors.green,
-                                      icon: Icons.change_circle,
-                                      label: 'Change infor',
+          if (homeStores.isLoading) {
+            return const ProgressShared();
+          } else if (homeStores.users.isEmpty) {
+            return ShowDiaLog(
+              content: homeStores.checkData
+                  ? homeStores.messageGetData
+                  : 'Không có dữ liệu',
+              title: 'Thông báo',
+              actions: [
+                ButtonDigLog(
+                  text: 'OK',
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+              color: Colors.blue[100],
+            );
+          } else {
+            return Observer(
+              builder: (_) => ListView.builder(
+                itemCount: homeStores.users.length,
+                itemBuilder: (context, index) {
+                  final UserModel user = homeStores.users[index];
+                  return Slidable(
+                    key: Key(index.toString()),
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: (context) {
+                            Navigator.of(context).pushNamed(
+                                AppRoutes.updateData,
+                                arguments: user);
+                          },
+                          backgroundColor: Colors.green,
+                          icon: Icons.change_circle,
+                          label: 'Change infor',
+                        ),
+                        SlidableAction(
+                          onPressed: (context) {
+                            // _showDigLogDelete(user: user, index: index);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ShowDiaLog(
+                                  title: 'Delete User',
+                                  content: 'Are you sure you want to delete?',
+                                  actions: [
+                                    ButtonDigLog(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      text: 'Cancel',
                                     ),
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        // _showDigLogDelete(user: user, index: index);
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ShowDiaLog(
-                                              title: 'Delete User',
-                                              content:
-                                                  'Are you sure you want to delete?',
-                                              actions: [
-                                                ButtonDigLog(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                  text: 'Cancel',
-                                                ),
-                                                ButtonDigLog(
-                                                  onPressed: () async {
-                                                    Navigator.of(context)
-                                                        .pushNamed(AppRoutes
-                                                            .homeScreens);
-                                                    await widget.homeStore
-                                                        .deleteUser(
-                                                            id: user.id,
-                                                            index: index);
-                                                    showCustomMess(
-                                                      content: widget.homeStore
-                                                          .messageDelete,
-                                                    );
-                                                  },
-                                                  text: 'Delete',
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                    ButtonDigLog(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await homeStores.deleteUser(
+                                            id: user.id, index: index);
+                                        showCustomMess(
+                                          content: homeStores.messageDelete,
                                         );
                                       },
-                                      backgroundColor: Colors.red,
-                                      icon: Icons.delete,
-                                      label: 'Delete',
+                                      text: 'Delete',
                                     ),
                                   ],
-                                ),
-                                child: InforUser(users: user),
-                              );
-                            },
-                          );
-                        },
-                      ),
-          );
+                                );
+                              },
+                            );
+                          },
+                          backgroundColor: Colors.red,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        ),
+                      ],
+                    ),
+                    child: InforUser(users: user),
+                  );
+                },
+              ),
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(

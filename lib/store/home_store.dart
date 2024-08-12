@@ -43,13 +43,12 @@ abstract class HomeStoreBase with Store {
 
   @observable
   List<UserModel> searchUser = [];
-  
+
   @observable
   String key = 'id';
-  
+
   List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
 
-  @action
   Future<void> getData({String? key, String? value}) async {
     try {
       List<UserModel> temp;
@@ -75,7 +74,6 @@ abstract class HomeStoreBase with Store {
     }
   }
 
-  @action
   Future<bool> deleteUser({required String id, required int index}) async {
     try {
       bool isDeleted = await _homeServices.deleteData(id);
@@ -100,14 +98,12 @@ abstract class HomeStoreBase with Store {
     searchUser = [];
   }
 
-  
   Future<void> saveUsers(List<UserModel> users) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userData = jsonEncode(users.map((e) => e.toMap()).toList());
     await prefs.setString('userData', userData);
   }
 
-  
   Future<List<UserModel>> listUsersData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? listUserData = prefs.getString('userData');
