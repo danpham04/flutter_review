@@ -19,20 +19,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  void _getData() async {
-    await widget.homeStore.getData();
+  @override
+  void initState() {
+    widget.homeStore.getData();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Observer(
-        builder: (context) {
+        builder: (_) {
           return Padding(
             padding: const EdgeInsets.all(8),
             child: widget.homeStore.isLoading
                 ? const ProgressShared()
-                : widget.homeStore.loadUser.isEmpty
+                : widget.homeStore.users.isEmpty
                     ? widget.homeStore.checkData
                         ? ShowDiaLog(
                             content: widget.homeStore.messageGetData,
@@ -56,69 +58,75 @@ class _HomeState extends State<Home> {
                             ],
                             color: Colors.blue[100],
                           )
-                    : ListView.builder(
-                        itemCount: widget.homeStore.loadUser.length,
-                        itemBuilder: (context, index) {
-                          final UserModel user =
-                              widget.homeStore.loadUser[index];
-                          return Slidable(
-                            key: Key(index.toString()),
-                            endActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (context) {
-                                    Navigator.of(context).pushNamed(
-                                        AppRoutes.updateData,
-                                        arguments: user);
-                                  },
-                                  backgroundColor: Colors.green,
-                                  icon: Icons.change_circle,
-                                  label: 'Change infor',
-                                ),
-                                SlidableAction(
-                                  onPressed: (context) {
-                                    // _showDigLogDelete(user: user, index: index);
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ShowDiaLog(
-                                          title: 'Delete User',
-                                          content:
-                                              'Are you sure you want to delete?',
-                                          actions: [
-                                            ButtonDigLog(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              text: 'Cancel',
-                                            ),
-                                            ButtonDigLog(
-                                              onPressed: () async {
-                                                Navigator.of(context).pushNamed(
-                                                    AppRoutes.homeScreens);
-                                                await widget.homeStore
-                                                    .deleteUser(
-                                                        id: user.id,
-                                                        index: index);
-                                                showCustomMess(
-                                                  content: widget
-                                                      .homeStore.messageDelete,
-                                                );
-                                              },
-                                              text: 'Delete',
-                                            ),
-                                          ],
+                    : Observer(
+                        builder: (_) {
+                          return ListView.builder(
+                            itemCount: widget.homeStore.users.length,
+                            itemBuilder: (context, index) {
+                              final UserModel user =
+                                  widget.homeStore.users[index];
+                              return Slidable(
+                                key: Key(index.toString()),
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        Navigator.of(context).pushNamed(
+                                            AppRoutes.updateData,
+                                            arguments: user);
+                                      },
+                                      backgroundColor: Colors.green,
+                                      icon: Icons.change_circle,
+                                      label: 'Change infor',
+                                    ),
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        // _showDigLogDelete(user: user, index: index);
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return ShowDiaLog(
+                                              title: 'Delete User',
+                                              content:
+                                                  'Are you sure you want to delete?',
+                                              actions: [
+                                                ButtonDigLog(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                  text: 'Cancel',
+                                                ),
+                                                ButtonDigLog(
+                                                  onPressed: () async {
+                                                    Navigator.of(context)
+                                                        .pushNamed(AppRoutes
+                                                            .homeScreens);
+                                                    await widget.homeStore
+                                                        .deleteUser(
+                                                            id: user.id,
+                                                            index: index);
+                                                    showCustomMess(
+                                                      content: widget.homeStore
+                                                          .messageDelete,
+                                                    );
+                                                  },
+                                                  text: 'Delete',
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                  backgroundColor: Colors.red,
-                                  icon: Icons.delete,
-                                  label: 'Delete',
+                                      backgroundColor: Colors.red,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: InforUser(users: user),
+                                child: InforUser(users: user),
+                              );
+                            },
                           );
                         },
                       ),

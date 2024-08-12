@@ -10,13 +10,9 @@ class HomeStore = HomeStoreBase with _$HomeStore;
 
 abstract class HomeStoreBase with Store {
   @observable
-  List<UserModel> _users = [];
+  List<UserModel> users = [];
 
-  @observable
   final HomeServices _homeServices = HomeServices();
-
-  @observable
-  List<UserModel> get loadUser => _users;
 
   @observable
   bool isLoading = true;
@@ -46,12 +42,11 @@ abstract class HomeStoreBase with Store {
   String messageSearch = '';
 
   @observable
-  List<UserModel> _searchUser = [];
+  List<UserModel> searchUser = [];
+  
   @observable
   String key = 'id';
-  @observable
-  List<UserModel> get searchUserData => _searchUser;
-  @observable
+  
   List<String> listTilte = ['ID', 'Name', 'Address', 'Mail', 'Nationality'];
 
   @action
@@ -61,22 +56,22 @@ abstract class HomeStoreBase with Store {
       if (key != null && value != null) {
         temp = await _homeServices.getData(key: key, value: value);
         if (value.isNotEmpty) {
-          _searchUser = temp;
+          searchUser = temp;
           checkSearchUser = true;
           checkValue = true;
         }
       } else {
         temp = await _homeServices.getData();
-        _users = temp;
+        users = temp;
         isLoading = false;
         checkData = false;
       }
-      await saveUsers(_users);
+      await saveUsers(users);
     } catch (e) {
       isLoading = false;
-      _searchUser = [];
+      searchUser = [];
       checkSearchUser = false;
-      _users = await listUsersData();
+      users = await listUsersData();
     }
   }
 
@@ -85,7 +80,7 @@ abstract class HomeStoreBase with Store {
     try {
       bool isDeleted = await _homeServices.deleteData(id);
       if (isDeleted) {
-        _users.removeAt(index);
+        users.removeAt(index);
         messageDelete = 'Xóa thành công';
       }
       return true;
@@ -102,15 +97,17 @@ abstract class HomeStoreBase with Store {
 
   @action
   void clearSearchUser() {
-    _searchUser = [];
+    searchUser = [];
   }
 
+  
   Future<void> saveUsers(List<UserModel> users) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userData = jsonEncode(users.map((e) => e.toMap()).toList());
     await prefs.setString('userData', userData);
   }
 
+  
   Future<List<UserModel>> listUsersData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? listUserData = prefs.getString('userData');
