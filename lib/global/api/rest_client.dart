@@ -13,6 +13,7 @@ class RestClient {
         contentType: jsonContentType);
     _dio = Dio(options);
 
+    // dùng thư package dùng để theo dõi trên console xem đã có dữ liệu truyền ra chưa
     _dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,

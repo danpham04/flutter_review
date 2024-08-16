@@ -7,7 +7,8 @@ import 'dart:convert';
 part 'home_store.g.dart';
 
 class HomeStore = HomeStoreBase with _$HomeStore;
-
+// TODO  flutter pub run build_runner watch luôn gen code trong đoạn code,
+//  flutter pub run build_runner build gen code khi đã code xong 
 abstract class HomeStoreBase with Store {
   @observable
   List<UserModel> users = [];
