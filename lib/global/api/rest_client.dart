@@ -31,6 +31,7 @@ class RestClient {
         maxWidth: 180));
   }
 
+  // khi call api thì api có thể trả data có nhiều kiểu khác nhau nên sẽ để kiểu là dynamic
   Future<dynamic> get(
     String path, {
     Object? data,
@@ -39,6 +40,8 @@ class RestClient {
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
   }) async {
+    // khi call api bắt buộc phải có để trả ra dât khi call thành công, trả ra một lỗi khi thất bại 
+
     try {
       final Response<dynamic> response = await _dio.get(
         path,
@@ -48,7 +51,7 @@ class RestClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data;
+      return response.data; // chỉ lấy dữ liệu là một data
     } catch (e) {
       throw _mapError(e);
     }
